@@ -9,6 +9,9 @@ window.ig.Pekac = class Pekac
     @pager = @bars.append \div
       ..attr \class \pager
     @columnWidth = 60px
+    @y = d3.scale.linear!
+      ..domain [0 1]
+      ..range [1 80]
 
   redraw: ->
     <~ @download
@@ -16,8 +19,10 @@ window.ig.Pekac = class Pekac
     @pager.selectAll \div.bar.active .data @data.strany, (.id)
       ..exit!remove!
       ..enter!append \div |> @initElms
-    @pager.selectAll \div.bar
+    @pager.selectAll \div.bar.active
       ..style \left ~> "#{@columnWidth * it.index}px"
+      ..select \.barArea
+        ..style \height ~> "#{@y it.hlasu}%"
     <~ setTimeout _, 500
 
 
@@ -26,6 +31,7 @@ window.ig.Pekac = class Pekac
     @data = data
     @data.strany.sort (a, b) -> b.hlasu - a.hlasu
     @data.strany.forEach (d, i) -> d.index = i
+    @y.domain [0 @data.strany.0.hlasu]
     cb!
 
   initElms: ->
@@ -37,3 +43,5 @@ window.ig.Pekac = class Pekac
       ..append \span
         ..attr \class \result
         ..html ~> utils.percentage it.hlasu / @hlasu
+      ..append \div
+        ..attr \class \barArea
