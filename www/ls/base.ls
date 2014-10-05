@@ -5,12 +5,15 @@ init = ->
   #   data = for i in [0 til len]
   #     event.data.charCodeAt i
   #   console.log data
+  window.ig.utils.percentage = ->
+    window.ig.utils.formatNumber it * 100, 1
   container = d3.select ig.containers.base
   pekac = new window.ig.Pekac container
-    ..download!
+    ..redraw!
 if d3?
   init!
 else
   window.onload = ->
     if d3?
       init!
+
