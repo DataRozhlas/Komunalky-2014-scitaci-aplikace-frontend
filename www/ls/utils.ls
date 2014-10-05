@@ -49,3 +49,14 @@ insertThousandSeparator = (input, separator = ' ') ->
       if isThirdNumeral and not isLast
         out.unshift separator
     out.join ''
+
+utils.download = (url, cb) ->
+  if window.XDomainRequest
+    xdr = new window.XDomainRequest!
+      ..open "get" url
+      ..onload = -> cb null, JSON.parse xdr.responseText
+      ..onerror = -> cb it
+      ..send!
+
+  else
+    d3.json url, cb
