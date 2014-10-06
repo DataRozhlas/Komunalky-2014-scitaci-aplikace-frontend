@@ -4,6 +4,8 @@ window.ig.Pekac = class Pekac
   (@baseElement) ->
     @element = @baseElement.append \div
       ..attr \class \pekac
+    @heading = @element.append \h2
+      ..html "Průběžné výsledky komunálních voleb"
     @bars = @element.append \div
       ..attr \class \bars
     @pager = @bars.append \div
@@ -19,11 +21,12 @@ window.ig.Pekac = class Pekac
 
   redraw: ->
     <~ @download
+    if @data.okrsky_celkem == @data.okrsky_spocteno
+      @heading.html "Celkové výsledky komunálních voleb"
     @hlasu = @data.hlasu
     @pager.selectAll \div.bar.active .data @data.strany, (.id)
       ..exit!remove!
       ..enter!append \div |> @initElms
-    # console.log @strany
     @pager.selectAll \div.bar.active
       ..style \left ~> "#{@columnWidth * it.index}px"
       ..select \.barArea
