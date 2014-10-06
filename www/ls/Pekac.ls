@@ -67,10 +67,14 @@ window.ig.Pekac = class Pekac
         ..attr \class \texts
         ..append \span
           ..attr \class \name
-          ..html ~> it.strana?zkratka || it.nazev
+          ..html ~>
+            if it.strana?zkratka
+              that
+            else
+              it.nazev.replace "Sdružení " "" .split " " .slice 0, 2 .join " "
         ..append \span
           ..attr \class \result
-          ..html ~> utils.percentage it.hlasu / @hlasu
+          ..html ~> "#{utils.percentage it.hlasu / @hlasu} %"
       ..append \div
         ..attr \class \barArea
 
