@@ -1,5 +1,5 @@
 utils = window.ig.utils
-window.ig.Pekac = class Pekac
+window.ig.Pekac = class Pekac implements utils.supplementalMixin
   (@baseElement) ->
     @element = @baseElement.append \div
       ..attr \class \pekac
@@ -29,13 +29,7 @@ window.ig.Pekac = class Pekac
       @heading.html "Celkové výsledky komunálních voleb"
     @hlasu = @data.hlasu
 
-    sectenoPerc = utils.percentage @data.okrsky_celkem / @data.okrsky_spocteno
-    if sectenoPerc == "100,0" and @data.okrsky_celkem != @data.okrsky_spocteno
-      sectenoPerc = "99,9"
-    @sectenoValue.html "#{sectenoPerc} %"
-    @sectenoFill.style \width "#{@data.okrsky_celkem / @data.okrsky_spocteno * 100}%"
-    @ucastValue.html   "#{utils.percentage @data.volilo / @data.volicu} %"
-    @ucastFill.style \width "#{@data.volilo / @data.volicu * 100}%"
+    @updateSupplemental!
 
     @pager.selectAll \div.bar.active .data @data.strany, (.id)
       ..exit!remove!
@@ -77,33 +71,6 @@ window.ig.Pekac = class Pekac
           ..html ~> "#{utils.percentage it.hlasu / @hlasu} %"
       ..append \div
         ..attr \class \barArea
-
-  drawSupplemental: ->
-    @supplemental = @element.append \div
-      ..attr \class \supplemental
-    @secteno = @supplemental.append \div
-      ..attr \class \secteno
-      ..append \h3 .html "Sečteno"
-      ..append \span
-        ..attr \class \value
-      ..append \div
-        ..attr \class \progress
-        ..append \div
-          ..attr \class \fill
-    @sectenoValue = @secteno.select "span.value"
-    @sectenoFill = @secteno.select "div.fill"
-
-    @ucast = @supplemental.append \div
-      ..attr \class \ucast
-      ..append \h3 .html "Účast"
-      ..append \span
-        ..attr \class \value
-      ..append \div
-        ..attr \class \progress
-        ..append \div
-          ..attr \class \fill
-    @ucastValue = @ucast.select "span.value"
-    @ucastFill = @ucast.select "div.fill"
 
   movePage: (dir) ->
     @currentPage -= dir

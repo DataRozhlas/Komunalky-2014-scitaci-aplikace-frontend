@@ -1,24 +1,21 @@
 .pekac
   width 100%
-  height 600px
+  height 390px
   h2
     position absolute
     top 5px
-    font-size 24px
-    color #036
-    margin 0px
   .bars
     position absolute
     top 0px
     left 0px
     width 100%
-    height 390px
+    height @height
     overflow hidden
     .pager
       position absolute
       top 0px
       left 0px
-      height 300px
+      height (@height - 90px)
       transition left 0.8s
     .bar
       position absolute
@@ -42,48 +39,6 @@
         left 0px
         width 50px
         background #aaa
-
-  .supplemental
-    position absolute
-    right 15px
-    top 8px
-    .secteno
-    .ucast
-      width 100%
-      position relative
-      padding-bottom 5px
-    .ucast
-      margin-top 16px
-    h3
-      font-weight normal
-      text-transform lowercase
-      font-variant small-caps
-      text-align center
-      margin 0px
-
-    .value
-      display block
-      width 100%
-      font-size 2em
-      text-align center
-      padding 8px 0px
-
-    .progress
-      width 100%
-      height 4px
-      border-radius 1px
-      background ColorGreyBg
-      border 1px solid darken(ColorGreyBg, 7%)
-      position absolute
-      bottom 0px
-      .fill
-        position absolute
-        top 0px
-        left 0px
-        background ColorHeading
-        border 1px solid darken(ColorHeading, 20%)
-        min-width 2px
-        height @height
 
   .paginator
     position absolute

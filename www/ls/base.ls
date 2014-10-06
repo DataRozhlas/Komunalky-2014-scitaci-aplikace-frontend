@@ -1,4 +1,5 @@
 init = ->
+  new Tooltip!watchElements!
   # es = new EventSource "http://localhost:8080/sse"
   # es.onmessage = (event) ->
   #   len = event.data.length
@@ -10,6 +11,8 @@ init = ->
   container = d3.select ig.containers.base
   pekac = new window.ig.Pekac container
     ..redraw!
+  senatKosti = new window.ig.SenatKosti container
+    ..download senatKosti~redraw
 if d3?
   init!
 else
