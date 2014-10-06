@@ -12,6 +12,10 @@ window.ig.Pekac = class Pekac
     @y = d3.scale.linear!
       ..domain [0 1]
       ..range [1 80]
+    @strany = {}
+    for line in window.ig.data.strany.split "\n"
+      [vstrana, nazev, zkratka, barva] = line.split "\t"
+      @strany[vstrana] = {nazev, zkratka, barva}
 
   redraw: ->
     <~ @download
@@ -19,10 +23,16 @@ window.ig.Pekac = class Pekac
     @pager.selectAll \div.bar.active .data @data.strany, (.id)
       ..exit!remove!
       ..enter!append \div |> @initElms
+    # console.log @strany
     @pager.selectAll \div.bar.active
       ..style \left ~> "#{@columnWidth * it.index}px"
       ..select \.barArea
         ..style \height ~> "#{@y it.hlasu}%"
+        ..style \background-color ~>
+          if it.strana?barva
+            that
+          else
+            void
     <~ setTimeout _, 500
 
 
@@ -30,18 +40,22 @@ window.ig.Pekac = class Pekac
     (err, data) <~ utils.download "//smzkomunalky.blob.core.windows.net/vysledky/obce.json"
     @data = data
     @data.strany.sort (a, b) -> b.hlasu - a.hlasu
-    @data.strany.forEach (d, i) -> d.index = i
+    @data.strany.forEach (d, i) ~>
+      d.strana = @strany[d.id]
+      d.index = i
     @y.domain [0 @data.strany.0.hlasu]
     cb!
 
   initElms: ->
     it
       ..attr \class "bar active"
-      ..append \span
-        ..attr \class \name
-        ..html (.nazev)
-      ..append \span
-        ..attr \class \result
-        ..html ~> utils.percentage it.hlasu / @hlasu
+      ..append \div
+        ..attr \class \texts
+        ..append \span
+          ..attr \class \name
+          ..html ~> it.strana?zkratka || it.nazev
+        ..append \span
+          ..attr \class \result
+          ..html ~> utils.percentage it.hlasu / @hlasu
       ..append \div
         ..attr \class \barArea

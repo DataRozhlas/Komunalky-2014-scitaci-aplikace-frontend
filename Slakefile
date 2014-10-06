@@ -12,8 +12,8 @@ externalStyles =
   # \https://samizdat.cz/tools/tooltip/v1.1.4.css
   ...
 
-externalData = {}
-  # "style": "#__dirname/www/screen.css"
+externalData =
+  "strany": "#__dirname/data/strany.tsv"
 
 preferScripts = <[ utils.js postInit.js _loadData.js ../data.js init.js _loadExternal.js]>
 deferScripts = <[ kandidatka.js base.js ]>
