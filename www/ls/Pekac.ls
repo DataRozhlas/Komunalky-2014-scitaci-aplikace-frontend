@@ -9,7 +9,10 @@ window.ig.Pekac = class Pekac
       ..attr \class \bars
     @pager = @bars.append \div
       ..attr \class \pager
+    @currentPage = 0
+
     @drawSupplemental!
+    @drawPaginator!
 
     @columnWidth = 60px
     @y = d3.scale.linear!
@@ -46,8 +49,6 @@ window.ig.Pekac = class Pekac
             that
           else
             void
-    <~ setTimeout _, 500
-
 
   download: (cb) ->
     (err, data) <~ utils.download "//smzkomunalky.blob.core.windows.net/vysledky/obce.json"
@@ -99,3 +100,24 @@ window.ig.Pekac = class Pekac
           ..attr \class \fill
     @ucastValue = @ucast.select "span.value"
     @ucastFill = @ucast.select "div.fill"
+
+  movePage: (dir) ->
+    @currentPage -= dir
+    @pager.style \left "#{@currentPage * 100}%"
+    if @currentPage == 0
+      @prevPage.classed \disabled true
+      <~ setTimeout _, 200
+      @prevPage.classed \removed true
+    else
+      @prevPage.classed \removed false
+      <~ setTimeout _, 200
+      @prevPage.classed \disabled false
+
+
+  drawPaginator: ->
+    @nextPage = @element.append \div
+      ..attr \class "paginator next"
+      ..on \click ~> @movePage +1
+    @prevPage = @element.append \div
+      ..attr \class "paginator prev disabled"
+      ..on \click ~> @movePage -1
