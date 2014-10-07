@@ -7,6 +7,13 @@ window.ig.Events = (target = null) ->
     events[type] ?= []
     events[type].push func
 
+  target.once = (type, func) ->
+    f = ->
+      func ...
+      console.log @
+      target.off type, @
+    target.on type, f
+
   target.off = (type, func) ->
     list = events[type]
     if func

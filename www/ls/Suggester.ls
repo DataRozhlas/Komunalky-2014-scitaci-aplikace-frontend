@@ -103,18 +103,22 @@ window.ig.Suggester = class Suggester
 
   downloadSuggestions: (cb) ->
     return cb?! if @suggestions.length
-    (err, text) <~ d3.text "/tools/suggester/0.0.1/okresy_obce.tsv"
+    (err, text) <~ d3.text "../data/obce_centroids_extents.tsv"
     [okresy, obce] = text.split "\n\n"
     okresy_assoc = {}
     okresy.split "\n"
       .map (.split "\t")
       .forEach ([kod, nazev]) -> okresy_assoc[kod] = {kod, nazev}
     @suggestions = for line in obce.split "\n"
-      [lon, lat, id, okres_kod, nazev] = line.split "\t"
+      [lon, lat, id, okres_kod, nazev, west, south, east, north] = line.split "\t"
       okres = okresy_assoc[okres_kod]
       lat = parseFloat lat
       lon = parseFloat lon
+      east  = parseFloat east
+      south = parseFloat south
+      west  = parseFloat west
+      north = parseFloat north
       id = parseInt id, 10
       nazevSearchable = nazev.toLowerCase!
-      {lat, lon, id, okres, nazev, nazevSearchable}
+      {lat, lon, id, okres, nazev, nazevSearchable, east, south, west, north}
     cb?!

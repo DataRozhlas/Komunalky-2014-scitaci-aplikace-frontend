@@ -8,12 +8,20 @@ init = ->
   #   console.log data
   window.ig.utils.percentage = ->
     window.ig.utils.formatNumber it * 100, 1
+
+  window.ig.strany = strany = {}
+  for line in window.ig.data.strany.split "\n"
+    [vstrana, nazev, zkratka, barva] = line.split "\t"
+    strany[vstrana] = {nazev, zkratka, barva}
+
+
   container = d3.select ig.containers.base
   firstScreen =
     element: container.append \div .attr \class "firstScreen"
-  pekac = new window.ig.Pekac firstScreen.element
+  downloadCache = new window.ig.DownloadCache
+  pekac = new window.ig.Pekac firstScreen.element, strany
     ..redraw!
-  obec = new window.ig.Obec container
+  obec = new window.ig.Obec container, strany, downloadCache
     ..element.classed \disabled yes
 
   displaySwitcher = new window.ig.DisplaySwitcher do
@@ -22,8 +30,9 @@ init = ->
     ..attr \class \suggester-container
   suggesterContainer.append \h2
     ..html "Zobrazit výsledky v obci"
-  suggester = new window.ig.Suggester suggesterContainer
+  window.ig.suggester = suggester = new window.ig.Suggester suggesterContainer
     ..on \selected displaySwitcher~switchTo
+    ..downloadSuggestions!
   senatKosti = new window.ig.SenatKosti firstScreen.element
     ..download senatKosti~redraw
   displaySwitcher.switchTo do
@@ -31,6 +40,8 @@ init = ->
     lat: 50.047
     lon: 14.314
     nazev: "Praha 13"
+    okres:
+      nazev: "Praha"
 if d3?
   init!
 else

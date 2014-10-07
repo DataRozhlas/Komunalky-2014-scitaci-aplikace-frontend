@@ -1,6 +1,6 @@
 utils = window.ig.utils
 window.ig.Pekac = class Pekac implements utils.supplementalMixin
-  (@baseElement) ->
+  (@baseElement, @strany) ->
     @element = @baseElement.append \div
       ..attr \class \pekac
     @heading = @element.append \h2
@@ -18,10 +18,7 @@ window.ig.Pekac = class Pekac implements utils.supplementalMixin
     @y = d3.scale.linear!
       ..domain [0 1]
       ..range [1 80]
-    @strany = {}
-    for line in window.ig.data.strany.split "\n"
-      [vstrana, nazev, zkratka, barva] = line.split "\t"
-      @strany[vstrana] = {nazev, zkratka, barva}
+
 
   redraw: ->
     <~ @download
