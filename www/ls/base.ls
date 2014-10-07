@@ -9,10 +9,28 @@ init = ->
   window.ig.utils.percentage = ->
     window.ig.utils.formatNumber it * 100, 1
   container = d3.select ig.containers.base
-  pekac = new window.ig.Pekac container
+  firstScreen =
+    element: container.append \div .attr \class "firstScreen"
+  pekac = new window.ig.Pekac firstScreen.element
     ..redraw!
-  senatKosti = new window.ig.SenatKosti container
+  obec = new window.ig.Obec container
+    ..element.classed \disabled yes
+
+  displaySwitcher = new window.ig.DisplaySwitcher do
+    {firstScreen, obec}
+  suggesterContainer = firstScreen.element.append \div
+    ..attr \class \suggester-container
+  suggesterContainer.append \h2
+    ..html "Zobrazit výsledky v obci"
+  suggester = new window.ig.Suggester suggesterContainer
+    ..on \selected displaySwitcher~switchTo
+  senatKosti = new window.ig.SenatKosti firstScreen.element
     ..download senatKosti~redraw
+  displaySwitcher.switchTo do
+    id: 539694
+    lat: 50.047
+    lon: 14.314
+    nazev: "Praha 13"
 if d3?
   init!
 else
