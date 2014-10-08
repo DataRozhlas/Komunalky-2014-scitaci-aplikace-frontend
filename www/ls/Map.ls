@@ -1,10 +1,20 @@
 window.ig.ObceMap = class ObceMap
+  maxZoom: 13
   (@parentElement, @downloadCache, @obec) ->
     @suggester = window.ig.suggester # HACK, use DI
     @displayed = {}
 
-  init: (coords) ->
-    @map = L.map @parentElement.0.0, minZoom: 6, maxZoom:13, zoom:13, center: coords, maxBounds: [[48.4,11.8], [51.2,18.9]]
+  init: ({lat, lon}:data) ->
+    @map = L.map do
+      * @parentElement.0.0
+      * minZoom: 6
+        maxZoom: @maxZoom
+        zoom: @maxZoom
+        center: {lat, lon}
+        maxBounds: [[48.4,11.8], [51.2,18.9]]
+    {zoom} = @getView data
+    if zoom < @maxZoom
+      @map.setView [lat, lon], zoom
     @mapInited = true
     baseLayer = L.tileLayer do
       * "https://samizdat.cz/tiles/ton_b1/{z}/{x}/{y}.png"
@@ -20,8 +30,14 @@ window.ig.ObceMap = class ObceMap
       ..on \moveend @~onMapMove
     @onMapMove!
 
-  center: (coords) ->
-    @map.setView coords
+  center: (data) ->
+    {lat, lon, zoom} = @getView data
+    @map.setView [lat, lon], zoom
+
+  getView: (data) ->
+    {lat, lon} = data
+    zoom = @map.getBoundsZoom [[data.south, data.west], [data.north, data.east]]
+    {lat, lon, zoom}
 
   setHighlight: (highlightedObecId) ->
     oldHighlight = @highlightedObecId
