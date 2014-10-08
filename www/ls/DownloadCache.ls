@@ -4,14 +4,17 @@ window.ig.DownloadCache = class DownloadCache
     @prefix = "//smzkomunalky.blob.core.windows.net/vysledky/"
 
   get: (dataType, cb) ->
-    item = if @items[dataType] then that else @create dataType
+    item = @getItem dataType
     <~ item.get
     cb null, item.data
+
+  getItem: (dataType) ->
+    if @items[dataType] then that else @create dataType
 
   create: (dataType) ->
     url = switch dataType
       | "senat"
-        ...
+        @prefix + "senat.json"
       | "obce"
         ...
       | otherwise
@@ -42,7 +45,7 @@ class CacheItem
     @valid = yes
     @downloading = no
     @data = data
-    @emit \downloaded
+    @emit \downloaded data
     cb null data
 
   invalidate: ->

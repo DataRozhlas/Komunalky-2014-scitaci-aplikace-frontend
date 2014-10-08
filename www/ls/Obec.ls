@@ -17,15 +17,30 @@ window.ig.Obec = class Obec
       ..append \h3 .html "Okolí"
     @mapElement = mapContainer.append \div
       ..attr \class \map
+    @senatContainer = @element.append \div
+      ..attr \class \senat-container
+      ..append \h3 .html "Senátní volby"
+    @senatElement = @senatContainer.append \div
+      ..attr \class \senat-element
 
   display: ({id, okres, nazev}:data) ->
+    @obecData = data
     @heading.html "Výsledky v obci #nazev"
     @subHeading.html "okres #{okres.nazev}"
-    setTimeout do
-      ~> @setMap data
-      0
+    @setMap data
     <~ @download id
-    @drawKosti!
+    top = @drawKosti!
+    @drawSenat top
+
+  drawSenat: (top) ->
+    if @obecData.senatObvod
+      @senatObvod = new window.ig.SenatObvod @senatElement
+      @senatContainer.classed \hidden no
+      @senatContainer.style \top "#{top}px"
+    else
+      @senatContainer.classed \hidden yes
+      @senatElement.html ''
+      @senatObvod.destroy!
 
   drawKosti: ->
     width = @kostiCont.0.0.offsetWidth
@@ -97,9 +112,11 @@ window.ig.Obec = class Obec
           "<b>Zastupitel za #{@strany[it.strana.id]?.zkratka || it.strana.nazev}<br></b>
           #{@strany[it.strana.id]?.zkratka || it.strana.nazev} získala #{utils.percentage it.strana.procent} % hlasů, #{it.strana.zastupitelu} zastupitelů<br>
           "
+    topCumm
 
   download: (id, cb) ->
     (err, data) <~ @downloadCache.get id
+    return if id != @obecData.id
     @data = data
     @data.kosti = []
     for type in <[mcmo obec]>

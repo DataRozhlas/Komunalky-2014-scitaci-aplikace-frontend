@@ -110,7 +110,7 @@ window.ig.Suggester = class Suggester
       .map (.split "\t")
       .forEach ([kod, nazev]) -> okresy_assoc[kod] = {kod, nazev}
     @suggestions = for line in obce.split "\n"
-      [lon, lat, id, okres_kod, nazev, west, south, east, north] = line.split "\t"
+      [lon, lat, id, okres_kod, nazev, senatObvod, west, south, east, north] = line.split "\t"
       okres = okresy_assoc[okres_kod]
       lat = parseFloat lat
       lon = parseFloat lon
@@ -120,5 +120,5 @@ window.ig.Suggester = class Suggester
       north = parseFloat north
       id = parseInt id, 10
       nazevSearchable = nazev.toLowerCase!
-      {lat, lon, id, okres, nazev, nazevSearchable, east, south, west, north}
+      {lat, lon, id, okres, nazev, nazevSearchable, east, south, west, north, senatObvod}
     cb?!

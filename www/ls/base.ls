@@ -18,7 +18,7 @@ init = ->
   container = d3.select ig.containers.base
   firstScreen =
     element: container.append \div .attr \class "firstScreen"
-  downloadCache = new window.ig.DownloadCache
+  window.ig.downloadCache = downloadCache = new window.ig.DownloadCache
   senatKosti = new window.ig.SenatKosti firstScreen.element
     ..download senatKosti~redraw
   pekac = new window.ig.Pekac firstScreen.element, strany
@@ -35,7 +35,13 @@ init = ->
     ..html "Zobrazit výsledky v obci"
   window.ig.suggester = suggester = new window.ig.Suggester suggesterContainer
     ..on \selected displaySwitcher~switchTo
-    ..downloadSuggestions!
+  <~ window.ig.suggester.downloadSuggestions!
+  pha = window.ig.suggester.suggestions
+    .filter -> it.id == 539694
+    .pop!
+  displaySwitcher.switchTo pha
+
+
 if d3?
   init!
 else
