@@ -11,12 +11,19 @@ window.ig.ObceMap = class ObceMap
       * zIndex: 1
         opacity: 1
         attribution: 'mapová data &copy; přispěvatelé <a target="_blank" href="http://osm.org">OpenStreetMap</a>, obrazový podkres <a target="_blank" href="http://stamen.com">Stamen</a>, <a target="_blank" href="https://samizdat.cz">Samizdat</a>'
-    @map.addLayer baseLayer
-    @map.on \moveend @~onMapMove
+    labelLayer = L.tileLayer do
+      * "https://samizdat.cz/tiles/ton_l1/{z}/{x}/{y}.png"
+      * zIndex: 3
+    @map
+      ..addLayer baseLayer
+      ..addLayer labelLayer
+      ..on \moveend @~onMapMove
     @onMapMove!
 
   center: (coords) ->
     @map.setView coords
+
+  setHighlight: (@highlightedObecId) ->
 
   onMapMove: ->
     return if @map.getZoom! < 11
@@ -29,27 +36,27 @@ window.ig.ObceMap = class ObceMap
       "south" : bounds.getSouth!
     toDisplay = suggestions.filter ~>
       (isInBounds it, bounds) and not @displayed[it.id]
-    console.log toDisplay.length, suggestions.length
     toDisplay.forEach ~>
       (err, data) <~ @downloadCache.get it.id
       return if err
       @draw it.id, data.geojson, data
         ..layer.on \click (_) ~>
-          console.log it
           @obec.display it
 
   draw: (id, geojson, obec) ->
-    obj = new ObecObj id, geojson, obec
+    obj = new ObecObj id, geojson, obec, id == @highlightedObecId
       ..layer.addTo @map
     @displayed[id] = obj
 
 class ObecObj
-  (@id, @geojson, obec) ->
+  (@id, @geojson, obec, highlighted) ->
     color = @getColor obec
     @style =
       fill: color
-      opacity: 1
+      opacity: if highlighted then 1 else 0.5
+      fillOpacity: if highlighted then 0.7 else 0.3
       color: color
+      zIndex: if highlighted then 2 else 1
     @layer = L.geoJson @geojson, @style
 
   getColor: (obecData) ->

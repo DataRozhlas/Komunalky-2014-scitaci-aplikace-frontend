@@ -17,7 +17,7 @@ window.ig.Obec = class Obec
     @heading.html "Výsledky v obci #nazev"
     @subHeading.html "Okres #{okres.nazev}"
     setTimeout do
-      ~> @setMap [lat, lon]
+      ~> @setMap [lat, lon], id
       0
     <~ @download id
     @drawKosti!
@@ -70,12 +70,13 @@ window.ig.Obec = class Obec
     | type is "mcmo" => "Městská část"
 
 
-  setMap: (coords) ->
+  setMap: (coords, obecId) ->
     if @map
       @map.center coords
     else
       @map = new window.ig.ObceMap @mapElement, @downloadCache, @
         ..init coords
+    @map.setHighlight obecId
 
 mergeObvody = (data) ->
   data.zastupitele = []
