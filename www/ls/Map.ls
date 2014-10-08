@@ -71,7 +71,7 @@ class ObecObj
         if strany_hlasy[strana.id] > topHlasu
           topHlasu = strany_hlasy[strana.id]
           topStrana = strana
-    window.ig.strany[strana.id]?barva || '#aaa'
+    window.ig.strany[topStrana.id]?barva || '#aaa'
 
 isInBounds = (needle, haystack) ->
   needle.north > haystack.south and needle.south < haystack.north and
