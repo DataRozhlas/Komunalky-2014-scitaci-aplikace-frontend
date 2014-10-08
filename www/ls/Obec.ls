@@ -1,10 +1,14 @@
 utils = window.ig.utils
 window.ig.Obec = class Obec
-  (@parentElement, @strany, @downloadCache) ->
+  (@parentElement, @strany, @downloadCache, @displaySwitcher) ->
     @element = @parentElement.append \div
       ..attr \class \obec
-    @heading = @element.append \h2
-    @subHeading = @element.append \h3
+    backbutton = utils.backbutton @element
+      ..on \click ~> @displaySwitcher.switchTo \firstScreen
+    headingGroup = @element.append \div
+      ..attr \class \headings
+    @heading = headingGroup.append \h2
+    @subHeading = headingGroup.append \h3
       ..attr \class \okres
     @kostiCont = @element.append \div
       ..attr \class \kostiCont
@@ -16,7 +20,7 @@ window.ig.Obec = class Obec
 
   display: ({id, okres, nazev}:data) ->
     @heading.html "Výsledky v obci #nazev"
-    @subHeading.html "Okres #{okres.nazev}"
+    @subHeading.html "okres #{okres.nazev}"
     setTimeout do
       ~> @setMap data
       0
@@ -46,7 +50,7 @@ window.ig.Obec = class Obec
     topCumm = 0
     typy = @kostiCont.selectAll \div.typ.active
       ..style \top ->
-        top = topCumm + nadpisMargin
+        top = topCumm
         topCumm += it.rows * kostSide + nadpisMargin
         top + "px"
       ..select \h3

@@ -20,3 +20,29 @@
     font-size 24px
     color #036
     margin 0px
+  a.closebtn
+    position absolute
+    top 12px
+    left 12px
+    width 40px
+    height 40px
+    border 3px solid ColorHeadingLink
+    border-radius 50%
+    background white
+    overflow hidden
+    svg
+      position absolute
+      top -2px
+      left -2px
+      width @width
+      height @height
+      path
+        fill ColorHeadingLink
+    &:hover
+      background lighten(ColorHeadingLink, 90%)
+      cursor pointer
+    &:active
+      background ColorHeadingLink
+      svg
+        path
+          fill white

@@ -26,6 +26,7 @@ init = ->
 
   displaySwitcher = new window.ig.DisplaySwitcher do
     {firstScreen, obec}
+  obec.displaySwitcher = displaySwitcher
   suggesterContainer = firstScreen.element.append \div
     ..attr \class \suggester-container
   suggesterContainer.append \h2
@@ -35,17 +36,6 @@ init = ->
     ..downloadSuggestions!
   senatKosti = new window.ig.SenatKosti firstScreen.element
     ..download senatKosti~redraw
-  displaySwitcher.switchTo do
-    id: 539694
-    lat: 50.047
-    lon: 14.314
-    east: 14.355
-    north: 50.066
-    south: 50.032
-    west: 14.271
-    nazev: "Praha 13"
-    okres:
-      nazev: "Praha"
 if d3?
   init!
 else

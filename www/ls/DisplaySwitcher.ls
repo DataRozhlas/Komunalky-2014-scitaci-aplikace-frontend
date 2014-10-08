@@ -4,7 +4,7 @@ window.ig.DisplaySwitcher = class DisplaySwitcher
   switchTo: (target) ->
     switch target
     | "firstScreen"
-      ...
+      @setActive "firstScreen"
     | "senat"
       ...
     | otherwise
