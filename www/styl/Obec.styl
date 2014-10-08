@@ -12,17 +12,20 @@
     margin 10px 0px 0px 0px
   .typ
     opacity 1
-    transition opacity 0.6s
+    transition opacity 0.6s, top 0.6s
+    position absolute
     &.deactivating
       opacity 0
   .kostiCont
     .kosti
+      position relative
       float left
       clear left
       width 100%
       margin-top 14px
+      transition height 0.6s
       .kost
-        float left
+        position absolute
         width 20px
         height 20px
         border-radius 2px

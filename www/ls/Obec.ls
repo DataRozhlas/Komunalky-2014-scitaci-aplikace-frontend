@@ -24,7 +24,14 @@ window.ig.Obec = class Obec
     @drawKosti!
 
   drawKosti: ->
-    @kostiCont.selectAll \div.typ.active .data @data.kosti, (.type)
+    width = @kostiCont.0.0.offsetWidth
+    kostSide = 28px
+    nadpisMargin = 50px
+    kostiX = Math.floor width / kostSide
+    @data.kosti.forEach ~>
+      it.rows = Math.ceil it.data.zastupitele.length / kostiX
+      it.fullType = @getTypeHuman it
+    @kostiCont.selectAll \div.typ.active .data @data.kosti, (.fullType)
       ..exit!
         ..classed \active no
         ..classed \deactivating yes
@@ -36,12 +43,17 @@ window.ig.Obec = class Obec
         ..append \h3
         ..append \div
           ..attr \class \kosti
-
+    topCumm = 0
     typy = @kostiCont.selectAll \div.typ.active
+      ..style \top ->
+        top = topCumm + nadpisMargin
+        topCumm += it.rows * kostSide + nadpisMargin
+        top + "px"
       ..select \h3
-        ..html @~getTypeHuman
+        ..html (.fullType)
 
     kosti = typy.select \.kosti
+      ..style \height -> "#{it.rows * kostSide}px"
       ..selectAll \.kost.active .data (.data.zastupitele)
         ..enter!append \div
           ..attr \class "kost active activating"
@@ -59,7 +71,12 @@ window.ig.Obec = class Obec
     strany = @strany
     kosti.selectAll \.kost.active
       ..style \background-color (d) -> strany[d.strana.id]?barva
+      ..style "top" (d, i, ii) ~>
+          "#{(i % @data.kosti[ii].rows) * kostSide}px"
+      ..style "left" (d, i, ii) ~>
+          "#{(Math.floor i / @data.kosti[ii].rows) * kostSide}px"
       ..classed \changed (d, i, ii) ->
+        return false if -1 != @className.indexOf 'activating'
         current = strany[d.strana.id]?barva
         oldKostiBarvy[ii] ?= []
         old = oldKostiBarvy[ii][i]

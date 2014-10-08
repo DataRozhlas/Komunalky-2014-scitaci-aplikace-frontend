@@ -35,16 +35,17 @@ init = ->
     ..downloadSuggestions!
   senatKosti = new window.ig.SenatKosti firstScreen.element
     ..download senatKosti~redraw
-  <~ window.ig.suggester.downloadSuggestions!
-  i = 6
-  j = 0
-  displaySwitcher.switchTo window.ig.suggester.suggestions[6]
-  # setInterval do
-  #   ->
-  #     ++i
-  #     i %= 2
-  #     displaySwitcher.switchTo window.ig.suggester.suggestions[6 + i]
-  #   2000
+  displaySwitcher.switchTo do
+    id: 539694
+    lat: 50.047
+    lon: 14.314
+    east: 14.355
+    north: 50.066
+    south: 50.032
+    west: 14.271
+    nazev: "Praha 13"
+    okres:
+      nazev: "Praha"
 if d3?
   init!
 else
