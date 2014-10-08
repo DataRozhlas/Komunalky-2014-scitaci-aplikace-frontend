@@ -45,18 +45,23 @@ window.ig.ObceMap = class ObceMap
     toDisplay.forEach ~>
       (err, data) <~ @downloadCache.get it.id
       return if err
-      @draw it.id, data.geojson, data
+      @draw it, data.geojson, data
         ..layer.on \click (_) ~>
           @obec.display it
+    for id, object of @displayed
+      if not isInBounds object.obec, bounds
+        @map.removeLayer @displayed[id].layer
+        delete @displayed[id]
 
-  draw: (id, geojson, obec) ->
-    obj = new ObecObj id, geojson, obec, id == @highlightedObecId
+  draw: (obec, geojson, vysledky) ->
+    obj = new ObecObj obec, geojson, vysledky, obec.id == @highlightedObecId
       ..layer.addTo @map
-    @displayed[id] = obj
+    @displayed[obec.id] = obj
 
 class ObecObj
-  (@id, @geojson, obec, highlighted) ->
-    color = @getColor obec
+  (@obec, @geojson, vysledky, highlighted) ->
+    @id = @obec.id
+    color = @getColor vysledky
     @style =
       fill: color
       opacity: if highlighted then 1 else 0.5
