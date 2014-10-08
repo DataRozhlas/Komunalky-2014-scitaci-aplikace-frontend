@@ -24,25 +24,48 @@ window.ig.Obec = class Obec
     @drawKosti!
 
   drawKosti: ->
-    @kostiCont.selectAll \div.typ .data @data.kosti, (.type)
-      ..exit!remove!
+    @kostiCont.selectAll \div.typ.active .data @data.kosti, (.type)
+      ..exit!
+        ..classed \active no
+        ..classed \deactivating yes
+        ..transition!
+          ..delay 600
+          ..remove!
       ..enter!append \div
-        ..attr \class \typ
+        ..attr \class "typ active"
         ..append \h3
         ..append \div
           ..attr \class \kosti
 
-    typy = @kostiCont.selectAll \div.typ
+    typy = @kostiCont.selectAll \div.typ.active
       ..select \h3
         ..html @~getTypeHuman
 
     kosti = typy.select \.kosti
-      ..selectAll \.kost .data (.data.zastupitele)
+      ..selectAll \.kost.active .data (.data.zastupitele)
         ..enter!append \div
-          ..attr \class \kost
-        ..exit!remove!
-    kosti.selectAll \.kost
-      ..style \background-color ~> @strany[it.strana.id]?barva
+          ..attr \class "kost active activating"
+          ..transition!
+            ..delay 10
+            ..attr \class "kost active"
+        ..exit!
+          ..classed \active no
+          ..classed \deactivating yes
+          ..transition!
+            ..delay 600
+            ..remove!
+    @oldKostiBarvy ?= []
+    oldKostiBarvy = @oldKostiBarvy
+    strany = @strany
+    kosti.selectAll \.kost.active
+      ..style \background-color (d) -> strany[d.strana.id]?barva
+      ..classed \changed (d, i, ii) ->
+        current = strany[d.strana.id]?barva
+        oldKostiBarvy[ii] ?= []
+        old = oldKostiBarvy[ii][i]
+        oldKostiBarvy[ii][i] = current
+        old != current xor -1 != @className.indexOf 'changed'
+
       ..attr \data-tooltip ~>
         if it.jmeno
           "<b>#{it.jmeno} #{it.prijmeni}</b><br>

@@ -10,6 +10,11 @@
     float left
     clear left
     margin 10px 0px 0px 0px
+  .typ
+    opacity 1
+    transition opacity 0.6s
+    &.deactivating
+      opacity 0
   .kostiCont
     .kosti
       float left
@@ -24,6 +29,14 @@
         margin-right 8px
         margin-bottom 8px
         background #aaa
+        transition background 0.6s, transform 0.6s
+        transform scale(1)
+        &.changed
+          transform rotate(90deg)
+        &.deactivating
+          transform scale(0)
+        &.activating
+          transform scale(0)
   .map-container
     position absolute
     bottom 0px
