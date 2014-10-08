@@ -19,6 +19,8 @@ init = ->
   firstScreen =
     element: container.append \div .attr \class "firstScreen"
   downloadCache = new window.ig.DownloadCache
+  senatKosti = new window.ig.SenatKosti firstScreen.element
+    ..download senatKosti~redraw
   pekac = new window.ig.Pekac firstScreen.element, strany
     ..redraw!
   obec = new window.ig.Obec container, strany, downloadCache
@@ -34,8 +36,6 @@ init = ->
   window.ig.suggester = suggester = new window.ig.Suggester suggesterContainer
     ..on \selected displaySwitcher~switchTo
     ..downloadSuggestions!
-  senatKosti = new window.ig.SenatKosti firstScreen.element
-    ..download senatKosti~redraw
 if d3?
   init!
 else
