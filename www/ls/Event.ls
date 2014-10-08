@@ -17,7 +17,7 @@ window.ig.Events = (target = null) ->
   target.off = (type, func) ->
     list = events[type]
     if func
-      i = list.length = func ? list.length : 0
+      i = list.length = if func then list.length else 0
       while(i-- > 0)
         if func == list[i] then list.splice i, 1
     else
