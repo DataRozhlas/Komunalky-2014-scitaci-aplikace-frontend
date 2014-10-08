@@ -8,9 +8,10 @@ window.ig.Obec = class Obec
       ..attr \class \okres
     @kostiCont = @element.append \div
       ..attr \class \kostiCont
-    @element.append \h3
-      ..html "Okolí"
-    @mapElement = @element.append \div
+    mapContainer = @element.append \div
+      ..attr \class \map-container
+      ..append \h3 .html "Okolí"
+    @mapElement = mapContainer.append \div
       ..attr \class \map
 
   display: ({id, okres, nazev}:data) ->
