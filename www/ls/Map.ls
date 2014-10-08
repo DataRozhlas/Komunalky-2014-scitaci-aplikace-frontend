@@ -23,7 +23,13 @@ window.ig.ObceMap = class ObceMap
   center: (coords) ->
     @map.setView coords
 
-  setHighlight: (@highlightedObecId) ->
+  setHighlight: (highlightedObecId) ->
+    oldHighlight = @highlightedObecId
+    @highlightedObecId = highlightedObecId
+    if @displayed[highlightedObecId]
+      that.highlight!
+    if @displayed[oldHighlight]
+      that.downlight!
 
   onMapMove: ->
     return if @map.getZoom! < 11
@@ -58,6 +64,18 @@ class ObecObj
       color: color
       zIndex: if highlighted then 2 else 1
     @layer = L.geoJson @geojson, @style
+
+  highlight: ->
+    @layer.setStyle do
+      fillOpacity: 0.7
+      opacity: 1
+      zIndex: 2
+
+  downlight: ->
+    @layer.setStyle do
+      fillOpacity: 0.3
+      opacity: 0.5
+      zIndex: 1
 
   getColor: (obecData) ->
     strany_hlasy = {}
