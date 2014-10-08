@@ -62,6 +62,7 @@ window.ig.ObceMap = class ObceMap
     toDisplay.forEach ~>
       (err, data) <~ @downloadCache.get it.id
       return if err
+      return unless data && data.geojson
       @draw it, data.geojson, data
         ..layer.on \click (_) ~>
           @obec.display it
