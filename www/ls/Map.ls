@@ -40,6 +40,7 @@ window.ig.ObceMap = class ObceMap
     {lat, lon, zoom}
 
   setHighlight: (highlightedObecId) ->
+    return if @displayed[highlightedObecId]?highlighted
     oldHighlight = @highlightedObecId
     @highlightedObecId = highlightedObecId
     if @displayed[highlightedObecId]
@@ -75,28 +76,26 @@ window.ig.ObceMap = class ObceMap
     @displayed[obec.id] = obj
 
 class ObecObj
-  (@obec, @geojson, vysledky, highlighted) ->
+  (@obec, @geojson, vysledky, @highlighted) ->
     @id = @obec.id
-    color = @getColor vysledky
-    @style =
-      fill: color
-      opacity: if highlighted then 1 else 0.5
-      fillOpacity: if highlighted then 0.7 else 0.3
-      color: color
-      zIndex: if highlighted then 2 else 1
-    @layer = L.geoJson @geojson, @style
+    @color = @getColor vysledky
+    @layer = L.geoJson @geojson, @getStyle!
 
   highlight: ->
-    @layer.setStyle do
-      fillOpacity: 0.7
-      opacity: 1
-      zIndex: 2
+    @highlighted = true
+    @layer.setStyle @getStyle!
 
   downlight: ->
-    @layer.setStyle do
-      fillOpacity: 0.3
-      opacity: 0.5
-      zIndex: 1
+    @highlighted = false
+    @layer.setStyle @getStyle!
+
+  getStyle: ->
+    @style =
+      fill: @color
+      opacity: if @highlighted then 1 else 0.5
+      fillOpacity: if @highlighted then 0.7 else 0.3
+      color: @color
+      zIndex: if @highlighted then 2 else 1
 
   getColor: (obecData) ->
     strany_hlasy = {}
