@@ -1,5 +1,6 @@
 window.ig.ObceMap = class ObceMap
   maxZoom: 13
+  maxZoomWithFeatures: 11
   (@parentElement, @downloadCache, @obec) ->
     @suggester = window.ig.suggester # HACK, use DI
     @displayed = {}
@@ -28,15 +29,21 @@ window.ig.ObceMap = class ObceMap
       ..addLayer baseLayer
       ..addLayer labelLayer
       ..on \moveend @~onMapMove
+      ..on \zoomend ~>
+        if @map.getZoom! < @maxZoomWithFeatures
+          for id, object of @displayed
+            @undraw id
     @onMapMove!
 
   center: (data) ->
     {lat, lon, zoom} = @getView data
-    @map.setView [lat, lon], zoom
+    @map.setView [lat, lon]#, zoom
 
   getView: (data) ->
     {lat, lon} = data
     zoom = @map.getBoundsZoom [[data.south, data.west], [data.north, data.east]]
+    if zoom < @maxZoomWithFeatures
+      zoom = @maxZoomWithFeatures
     {lat, lon, zoom}
 
   setHighlight: (highlightedObecId) ->
@@ -49,7 +56,7 @@ window.ig.ObceMap = class ObceMap
       that.downlight!
 
   onMapMove: ->
-    return if @map.getZoom! < 11
+    return if @map.getZoom! < @maxZoomWithFeatures
     suggestions = @suggester.suggestions
     bounds = @map.getBounds!
     bounds =
@@ -68,8 +75,13 @@ window.ig.ObceMap = class ObceMap
           @obec.display it
     for id, object of @displayed
       if not isInBounds object.obec, bounds
-        @map.removeLayer @displayed[id].layer
-        delete @displayed[id]
+        @undraw id
+
+  undraw: (id) ->
+    obj = @displayed[id]
+    return unless obj
+    @map.removeLayer obj.layer
+    delete @displayed[id]
 
   draw: (obec, geojson, vysledky) ->
     obj = new ObecObj obec, geojson, vysledky, obec.id == @highlightedObecId
