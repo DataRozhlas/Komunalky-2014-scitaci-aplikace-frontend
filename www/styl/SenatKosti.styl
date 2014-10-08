@@ -21,23 +21,36 @@
       position absolute
       width 24px
       height 24px
-      background #aaa
       margin-left -12px
       margin-top -12px
-      border-radius 2px
-      overflow hidden
       .first
       .second
+        background #aaa
         position absolute
         top 0px
         width 50%
         height 100%
+        z-index 3
       .first
+        border-top-left-radius 3px
+        border-bottom-left-radius 3px
         left 0px
       .second
+        border-top-right-radius 3px
+        border-bottom-right-radius 3px
         right 0px
       &.decided
         .first
+          border-radius 3px
           width 100%
         .second
           display none
+      .previous
+        width 24px + 10px
+        height 24px + 10px
+        position relative
+        left -5px
+        top -5px
+        z-index 2
+        opacity 0.4
+

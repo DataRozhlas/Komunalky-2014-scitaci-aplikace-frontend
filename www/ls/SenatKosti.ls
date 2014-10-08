@@ -28,6 +28,14 @@ locations =
   "24": [69 29]
   "72": [79 15]
   "60": [66 73]
+
+barvy =
+  "21": 53
+  "24": 53
+  "27": 53
+  "54": 47
+defaultBarva = 7
+
 window.ig.SenatKosti = class SenatKosti implements utils.supplementalMixin
   (@baseElement) ->
     @element = @baseElement.append \div
@@ -55,23 +63,29 @@ window.ig.SenatKosti = class SenatKosti implements utils.supplementalMixin
     @updateSupplemental!
     @kosti
       ..classed \decided -> it.data.obvodDecided
-      ..style \left -> "#{locations[it.data.obvodId + 2]?0}%"
-      ..style \top -> "#{locations[it.data.obvodId + 2]?1}%"
+      ..style \left -> "#{locations[it.data.obvodId]?0}%"
+      ..style \top -> "#{locations[it.data.obvodId]?1}%"
       ..attr \data-tooltip (obvod) ~>
+        strana = barvy[obvod.data.obvodId] || defaultBarva
         out = "<b>Senátní obvod č. #{obvod.data.obvodId}: #{@obvody_meta[obvod.data.obvodId].nazev}</b><br>"
         out += obvod.data.kandidati.slice 0, 2
           .map (kandidat) ->
             "#{kandidat.data.jmeno} <b>#{kandidat.data.prijmeni}</b>: <b>#{utils.percentage kandidat.hlasu / obvod.data.hlasu} %</b> (#{kandidat.data.zkratka}, #{kandidat.hlasu} hl.)"
           .join "<br>"
+        out += "<br>Obvod obhajuje #{window.ig.strany[strana].zkratka}"
+        out
 
     @kostiFirst.style \background-color -> it.data.kandidati.0.data.barva
     @kostiSecond.style \background-color -> it.data.kandidati.1.data.barva
+    @kostiPrevious.style \background-color ->
+      strana = barvy[it.data.obvodId] || defaultBarva
+      window.ig.strany[strana].barva
 
   download: (cb) ->
     (err, data) <~ utils.download "//smzkomunalky.blob.core.windows.net/vysledky/senat.json"
     @data = data
     @data.obvody_array = for obvodId, datum of @data.obvody
-      datum.obvodId = parseInt obvodId, 10
+      datum.obvodId = (parseInt obvodId, 10) + 2 # HACK, remove
       datum.hlasu = 0
       for senator in datum.kandidati
         datum.hlasu += that if senator.hlasu
@@ -93,6 +107,8 @@ window.ig.SenatKosti = class SenatKosti implements utils.supplementalMixin
       ..attr \class \first
     @kostiSecond = @kosti.append \div
       ..attr \class \second
+    @kostiPrevious = @kosti.append \div
+      ..attr \class \previous
 
 
   parseObvodyMeta: ->
