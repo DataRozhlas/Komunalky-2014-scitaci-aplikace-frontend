@@ -2,7 +2,6 @@ utils = window.ig.utils
 window.ig.SenatObvod = class SenatObvod
   (@parentElement, @obvodId) ->
     @senatori = window.ig.senatori
-    @obvodId = (parseInt @obvodId, 10) + 1 # HACK, remove
     @resource = window.ig.downloadCache.getItem "senat" # fuck DI!
     @element = @parentElement.append \div
       ..attr \class \senat-obvod
@@ -40,5 +39,6 @@ window.ig.SenatObvod = class SenatObvod
         ..html ", "
 
   destroy: ->
+    @element.remove!
     @resource.off \downloaded @onDownload
 

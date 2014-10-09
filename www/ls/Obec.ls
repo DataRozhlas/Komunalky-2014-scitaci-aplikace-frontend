@@ -27,6 +27,7 @@ window.ig.Obec = class Obec
 
   display: ({id, okres, nazev}:data) ->
     @obecData = data
+    @obecData.obvodId = (parseInt data.senatObvod, 10) + 1 # HACK, remove
     @heading.html "Výsledky v obci #nazev"
     @subHeading.html "okres #{okres.nazev}"
     @setMap data
@@ -35,15 +36,22 @@ window.ig.Obec = class Obec
     @drawSenat top
 
   drawSenat: (top) ->
-    if @obecData.senatObvod
-      @senatHeading.html "Senátní volby &ndash; obvod #{window.ig.senat_obvody_meta[@obecData.senatObvod].nazev}"
-      @senatObvod = new window.ig.SenatObvod @senatElement, @obecData.senatObvod
+    if @obecData.obvodId
+      if @senatObvod
+        if @senatObvod.obvodId == @obecData.obvodId
+          @senatContainer.style \top "#{top}px"
+          return
+        else
+          @senatObvod.destroy!
+      @senatHeading.html "Senátní volby &ndash; obvod #{window.ig.senat_obvody_meta[@obecData.obvodId].nazev}"
+      @senatObvod = new window.ig.SenatObvod @senatElement, @obecData.obvodId
       @senatContainer.classed \hidden no
       @senatContainer.style \top "#{top}px"
     else
       @senatContainer.classed \hidden yes
       @senatElement.html ''
       @senatObvod.destroy!
+      @senatObvod = null
 
   drawKosti: ->
     width = @kostiCont.0.0.offsetWidth - 68
