@@ -17,12 +17,10 @@ window.ig.SenatObvod = class SenatObvod
     @kandidati = @data.kandidati
     @kandidati.sort (a, b) -> b.hlasu - a.hlasu
     @kandidatiElm.selectAll \span.kandidat .remove!
-    console.log @kandidati.0
     celkemHlasu = 0
     @kandidati.forEach ~>
       it.data = @senatori["#{@obvodId}-#{it.id}"]
       celkemHlasu += it.hlasu
-    console.log @data
     @kandidatiElm.selectAll \span.kandidat .data @kandidati .enter!append \span
       ..attr \class (d, i) -> "kandidat kandidat-#i"
       ..append \span

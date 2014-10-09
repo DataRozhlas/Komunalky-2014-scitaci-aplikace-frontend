@@ -46,7 +46,7 @@ window.ig.Obec = class Obec
       @senatObvod.destroy!
 
   drawKosti: ->
-    width = @kostiCont.0.0.offsetWidth
+    width = @kostiCont.0.0.offsetWidth - 68
     kostSide = 28px
     nadpisMargin = 40px
     kostiX = Math.floor width / kostSide
