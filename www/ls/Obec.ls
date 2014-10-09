@@ -121,15 +121,14 @@ window.ig.Obec = class Obec
       ..on \click ~> @toggleFavouriteStrana it.strana.id
 
       ..attr \data-tooltip ~>
-        if it.jmeno
+        out = if it.jmeno
           "<b>#{it.jmeno} #{it.prijmeni}</b><br>
-          Získal #{it.hlasu} hlasů<br />
-          #{@strany[it.strana.id]?.zkratka || it.strana.nazev} získala #{utils.percentage it.strana.procent} % hlasů, #{it.strana.zastupitelu} zastupitelů<br>
-          "
+          Získal #{it.hlasu} hlasů<br />"
         else
-          "<b>Zastupitel za #{@strany[it.strana.id]?.zkratka || it.strana.nazev}<br></b>
-          #{@strany[it.strana.id]?.zkratka || it.strana.nazev} získala #{utils.percentage it.strana.procent} % hlasů, #{it.strana.zastupitelu} zastupitelů<br>
-          "
+          "<b>Zastupitel za #{@strany[it.strana.id]?.zkratka || it.strana.nazev}</b><br>"
+        out += "#{@strany[it.strana.id]?.zkratka || it.strana.nazev} získala #{utils.percentage it.strana.procent} % hlasů, #{it.strana.zastupitelu} zastupitelů<br>"
+        out += "<em>Klikněte pro přiřazení strany do koalice</em>"
+        out
     if @favouriteStrany.length
       @redrawFifty!
     topCumm
