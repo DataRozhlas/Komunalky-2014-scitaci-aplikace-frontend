@@ -67,20 +67,22 @@ init = ->
     ..redraw!
   obec = new window.ig.Obec container, strany, downloadCache
     ..element.classed \disabled yes
-
+  senat = new window.ig.SenatOverview container, downloadCache
+    ..element.classed \disabled yes
   displaySwitcher = new window.ig.DisplaySwitcher do
-    {firstScreen, obec}
+    {firstScreen, obec, senat}
   obec.displaySwitcher = displaySwitcher
+  senat.displaySwitcher = displaySwitcher
   suggesterContainer.append \h2
     ..html "Zobrazit výsledky v obci"
   window.ig.suggester = suggester = new window.ig.Suggester suggesterContainer
     ..on \selected displaySwitcher~switchTo
+  displaySwitcher.switchTo 'senat'
   <~ window.ig.suggester.downloadSuggestions!
-
-  pha = window.ig.suggester.suggestions
-    .filter -> it.id == 539694
-    .pop!
-  displaySwitcher.switchTo pha
+  # pha = window.ig.suggester.suggestions
+  #   .filter -> it.id == 539694
+  #   .pop!
+  # displaySwitcher.switchTo pha
 
 
 if d3?
