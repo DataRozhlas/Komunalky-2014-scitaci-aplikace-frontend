@@ -108,6 +108,7 @@ class ObecObj
   getStyle: ->
     @style =
       fill: @color
+      weight: 2
       opacity: if @highlighted then 1 else 0.5
       fillOpacity: if @highlighted then 0.7 else 0.3
       color: @color
