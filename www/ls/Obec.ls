@@ -207,7 +207,7 @@ window.ig.Obec = class Obec
     @map.setHighlight obec.id
 
   initFavouriteStrany: ->
-    @favouriteStrany = [57]
+    @favouriteStrany = []
 
   toggleFavouriteStrana: (id) ->
     index = @favouriteStrany.indexOf id
