@@ -44,10 +44,6 @@ window.ig.SenatKosti = class SenatKosti implements utils.supplementalMixin
       ..html "Průběžné výsledky senatních voleb"
     @element.append \img
       ..attr \src './img/obvody.svg'
-      ..on \mousemove ->
-        console.log do
-          (d3.event.offsetX / @offsetWidth * 100).toFixed 2
-          (d3.event.offsetY / @offsetHeight * 100).toFixed 2
     @obvody = for [0 til 27] => {data: null}
     @drawSupplemental!
     @drawEmptyBoxes!

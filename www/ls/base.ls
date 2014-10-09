@@ -47,10 +47,10 @@ init = ->
     ..on \selected displaySwitcher~switchTo
   <~ window.ig.suggester.downloadSuggestions!
 
-  pha = window.ig.suggester.suggestions
-    .filter -> it.id == 539694
-    .pop!
-  displaySwitcher.switchTo pha
+  # pha = window.ig.suggester.suggestions
+  #   .filter -> it.id == 539694
+  #   .pop!
+  # displaySwitcher.switchTo pha
 
 
 if d3?
