@@ -212,7 +212,7 @@ window.ig.Obec = class Obec
   toggleFavouriteStrana: (id) ->
     index = @favouriteStrany.indexOf id
     if @favouriteStrany.length and index == @favouriteStrany.length - 1
-      @removeFavouriteStrana
+      @removeFavouriteStrana id
     else
       @removeFavouriteStrana id if index != -1
       @addFavouriteStrana id
