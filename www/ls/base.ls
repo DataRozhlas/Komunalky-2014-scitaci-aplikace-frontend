@@ -15,6 +15,16 @@ init = ->
     strany[vstrana] = {nazev, zkratka, barva}
 
 
+  window.ig.senatori = senatori = {}
+  for senator in ig.data.senat.split "\n"
+    [obvod, id, jmeno, prijmeni, strana, zkratka, barva] = senator.split "\t"
+    senatori["#{obvod}-#{id}"] = {jmeno, prijmeni, strana, zkratka, barva}
+
+  window.ig.senat_obvody_meta = obvody_meta = {}
+  for line in window.ig.data.senat_obvody.split "\n"
+    [id, nazev] = line.split "\t"
+    obvody_meta[id] = {nazev}
+
   container = d3.select ig.containers.base
   firstScreen =
     element: container.append \div .attr \class "firstScreen"

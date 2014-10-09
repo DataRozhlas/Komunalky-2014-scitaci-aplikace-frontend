@@ -19,7 +19,7 @@ window.ig.Obec = class Obec
       ..attr \class \map
     @senatContainer = @element.append \div
       ..attr \class \senat-container
-      ..append \h3 .html "Senátní volby"
+    @senatHeading = @senatContainer.append \h3 .html "Senátní volby"
     @senatElement = @senatContainer.append \div
       ..attr \class \senat-element
 
@@ -34,7 +34,8 @@ window.ig.Obec = class Obec
 
   drawSenat: (top) ->
     if @obecData.senatObvod
-      @senatObvod = new window.ig.SenatObvod @senatElement
+      @senatHeading.html "Senátní volby &ndash; obvod #{window.ig.senat_obvody_meta[@obecData.senatObvod].nazev}"
+      @senatObvod = new window.ig.SenatObvod @senatElement, @obecData.senatObvod
       @senatContainer.classed \hidden no
       @senatContainer.style \top "#{top}px"
     else

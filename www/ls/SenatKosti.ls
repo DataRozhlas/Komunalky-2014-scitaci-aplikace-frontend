@@ -51,8 +51,8 @@ window.ig.SenatKosti = class SenatKosti implements utils.supplementalMixin
     @obvody = for [0 til 27] => {data: null}
     @drawSupplemental!
     @drawEmptyBoxes!
-    @parseObvodyMeta!
-    @senatori = {}
+    @obvody_meta = window.ig.senat_obvody_meta
+    @senatori = window.ig.senatori
     for senator in ig.data.senat.split "\n"
       [obvod, id, jmeno, prijmeni, strana, zkratka, barva] = senator.split "\t"
       @senatori["#{obvod}-#{id}"] = {jmeno, prijmeni, strana, zkratka, barva}
@@ -109,10 +109,3 @@ window.ig.SenatKosti = class SenatKosti implements utils.supplementalMixin
       ..attr \class \second
     @kostiPrevious = @kosti.append \div
       ..attr \class \previous
-
-
-  parseObvodyMeta: ->
-    @obvody_meta = {}
-    for line in window.ig.data.senat_obvody.split "\n"
-      [id, nazev] = line.split "\t"
-      @obvody_meta[id] = {nazev}
