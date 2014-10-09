@@ -10,14 +10,16 @@ window.ig.Obec = class Obec
     @heading = headingGroup.append \h2
     @subHeading = headingGroup.append \h3
       ..attr \class \okres
-    @kostiCont = @element.append \div
+    topPart = @element.append \div
+      ..attr \class \top-vyledky-voleb
+    @kostiCont = topPart.append \div
       ..attr \class \kostiCont
     mapContainer = @element.append \div
       ..attr \class \map-container
       ..append \h3 .html "Okolí"
     @mapElement = mapContainer.append \div
       ..attr \class \map
-    @senatContainer = @element.append \div
+    @senatContainer = topPart.append \div
       ..attr \class \senat-container
     @senatHeading = @senatContainer.append \h3 .html "Senátní volby"
     @senatElement = @senatContainer.append \div
@@ -46,7 +48,7 @@ window.ig.Obec = class Obec
   drawKosti: ->
     width = @kostiCont.0.0.offsetWidth
     kostSide = 28px
-    nadpisMargin = 50px
+    nadpisMargin = 40px
     kostiX = Math.floor width / kostSide
     @data.kosti.forEach ~>
       it.rows = Math.ceil it.data.zastupitele.length / kostiX
