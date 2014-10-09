@@ -28,6 +28,8 @@ init = ->
   container = d3.select ig.containers.base
   firstScreen =
     element: container.append \div .attr \class "firstScreen"
+  suggesterContainer = firstScreen.element.append \div
+    ..attr \class \suggester-container
   window.ig.downloadCache = downloadCache = new window.ig.DownloadCache
   senatKosti = new window.ig.SenatKosti firstScreen.element
     ..download senatKosti~redraw
@@ -39,8 +41,6 @@ init = ->
   displaySwitcher = new window.ig.DisplaySwitcher do
     {firstScreen, obec}
   obec.displaySwitcher = displaySwitcher
-  suggesterContainer = firstScreen.element.append \div
-    ..attr \class \suggester-container
   suggesterContainer.append \h2
     ..html "Zobrazit výsledky v obci"
   window.ig.suggester = suggester = new window.ig.Suggester suggesterContainer
