@@ -105,8 +105,9 @@ window.ig.Obec = class Obec
     @oldKostiBarvy ?= []
     oldKostiBarvy = @oldKostiBarvy
     strany = @strany
+    utils.resetStranyColors!
     @currentKost = @currentKosti.selectAll \.kost.active
-      ..style \background-color (d) -> strany[d.strana.id]?barva
+      ..style \background-color (d) -> utils.getStranaColor d.strana.id, 'd'
       ..style "top" (d, i, ii) ~>
           "#{(i % @data.kosti[ii].rows) * @kostSide}px"
       ..style "left" (d, i, ii) ~>

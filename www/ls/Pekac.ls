@@ -31,15 +31,13 @@ window.ig.Pekac = class Pekac implements utils.supplementalMixin
     @pager.selectAll \div.bar.active .data @data.strany, (.id)
       ..exit!remove!
       ..enter!append \div |> @initElms
+    utils.resetStranyColors!
     @pager.selectAll \div.bar.active
       ..style \left ~> "#{@columnWidth * it.index}px"
       ..select \.barArea
         ..style \height ~> "#{@y it.hlasu}%"
         ..style \background-color ~>
-          if it.strana?barva
-            that
-          else
-            void
+          utils.getStranaColor it.strana
 
   download: (cb) ->
     (err, data) <~ utils.download "//smzkomunalky.blob.core.windows.net/vysledky/obce.json"
