@@ -30,7 +30,7 @@ window.ig.SenatObvod = class SenatObvod
         ..html ~> " #{utils.percentage it.hlasu / celkemHlasu} %"
       ..append \span
         ..attr \class \strana-kost
-        ..style \background-color ~> it.data.barva
+        ..style \background-color ~> it.data.barva || '#aaa'
       ..append \span
         ..attr \class \strana
         ..html ~> " (#{it.data.zkratka || it.data.strana})"

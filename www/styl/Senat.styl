@@ -1,6 +1,28 @@
 .senat
   width 100%
   position absolute
+  top 0px
+  bottom 0px
+  .scrollable
+    position absolute
+    top 0px
+    left 0px
+    bottom 0px
+    overflow auto
   h2
     margin-left 68px
     margin-top 23px
+  .obvod
+    float left
+    padding-top 10px
+    padding-bottom 10px
+    padding-left 68px
+    &:nth-child(2n)
+      background #eee
+    &.highlight
+      background lighten(ColorHeading, 90%)
+  h3
+    color ColorHeading
+    float left
+    clear left
+    margin 0px

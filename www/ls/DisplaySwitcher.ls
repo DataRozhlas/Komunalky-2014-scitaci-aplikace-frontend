@@ -1,12 +1,14 @@
 window.ig.DisplaySwitcher = class DisplaySwitcher
   ({@firstScreen, @obec, @senat}) ->
 
-  switchTo: (target) ->
+  switchTo: (target, ...args) ->
     switch target
     | "firstScreen"
       @setActive "firstScreen"
     | "senat"
       @setActive "senat"
+      if args.length
+        @senat.highlight ...args
     | otherwise
       @obec.display target
       @setActive "obec"
