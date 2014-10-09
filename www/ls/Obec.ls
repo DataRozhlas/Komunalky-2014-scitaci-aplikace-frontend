@@ -136,7 +136,6 @@ window.ig.Obec = class Obec
 
   redrawSortOnly: ->
     width = @kostiCont.0.0.offsetWidth - 68
-    nadpisMargin = 40px
     kostiX = Math.floor width / @kostSide
 
     @data.kosti.forEach  ~>
@@ -160,7 +159,7 @@ window.ig.Obec = class Obec
     @currentKosti.selectAll \div.fiftyHeadline
       ..style \left (d, i, ii) ~>
         i = @data.kosti[ii].data.zastupitele.length / 2
-        "#{(Math.floor i / @data.kosti[ii].rows) * @kostSide}px"
+        "#{(Math.ceil i / @data.kosti[ii].rows) * @kostSide}px"
     @currentKosti.selectAll \div.fiftyBg
       .data (-> [0 til Math.ceil it.data.zastupitele.length / 2])
         ..exit!remove!
