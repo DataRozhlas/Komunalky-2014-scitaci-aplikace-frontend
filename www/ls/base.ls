@@ -71,8 +71,7 @@ init = ->
     ..element.classed \disabled yes
   displaySwitcher = new window.ig.DisplaySwitcher do
     {firstScreen, obec, senat}
-  obec.displaySwitcher = displaySwitcher
-  senat.displaySwitcher = displaySwitcher
+  obec.displaySwitcher = senat.displaySwitcher = senatKosti.displaySwitcher = displaySwitcher
   suggesterContainer.append \h2
     ..html "Zobrazit výsledky v obci"
   window.ig.suggester = suggester = new window.ig.Suggester suggesterContainer

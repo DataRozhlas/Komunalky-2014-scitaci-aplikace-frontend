@@ -61,6 +61,7 @@ window.ig.SenatKosti = class SenatKosti implements utils.supplementalMixin
       ..classed \decided -> it.data.obvodDecided
       ..style \left -> "#{locations[it.data.obvodId]?0}%"
       ..style \top -> "#{locations[it.data.obvodId]?1}%"
+      ..on \click ~> @displaySwitcher.switchTo 'senat', it.data.obvodId
       ..attr \data-tooltip (obvod) ~>
         strana = barvy[obvod.data.obvodId] || defaultBarva
         out = "<b>Senátní obvod č. #{obvod.data.obvodId}: #{@obvody_meta[obvod.data.obvodId].nazev}</b><br>"
