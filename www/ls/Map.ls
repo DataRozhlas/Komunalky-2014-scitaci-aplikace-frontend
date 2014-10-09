@@ -1,3 +1,4 @@
+tooltip = new Tooltip!
 window.ig.ObceMap = class ObceMap
   maxZoom: 13
   maxZoomWithFeatures: 11
@@ -71,8 +72,10 @@ window.ig.ObceMap = class ObceMap
       return if err
       return unless data && data.geojson
       @draw it, data.geojson, data
-        ..layer.on \click (_) ~>
-          @obec.display it
+        ..layer
+          ..on \click (_) ~> @obec.display it
+          ..on \mouseover (_)  ~> tooltip.display it.nazev
+          ..on \mouseout ~> tooltip.hide!
     for id, object of @displayed
       if not isInBounds object.obec, bounds
         @undraw id
