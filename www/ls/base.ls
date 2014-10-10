@@ -6,44 +6,10 @@ init = ->
   #   data = for i in [0 til len]
   #     event.data.charCodeAt i
   #   console.log data
-  window.ig.utils.percentage = ->
-    window.ig.utils.formatNumber it * 100, 1
-  barvaIterator = 140
-  barvyAssigned = {}
-  window.ig.utils.resetStranyColors = -> barvyAssigned := {}
-  window.ig.utils.getStranaColor = (strana) ->
-    barva = null
-    id = null
-    if typeof! strana is 'Object'
-      if strana.id
-        barva = strany[that].barva
-        id = that
-      else if strana.barva
-        barva = that
-    else if strana
-      id = that
-      barva = strany[that]?barva
-    if barva
-      that
-    else
-      if id and barvyAssigned[id]
-        barvyAssigned[id]
-      else
-        barvaIterator += 40
-        barvaIterator %= 220
-        if barvaIterator < 100
-          barvaIterator := 100
-        barva = "rgb(#barvaIterator,#barvaIterator,#barvaIterator)"
-        if id != null
-          barvyAssigned[id] = barva
-        barva
-
-
   window.ig.strany = strany = {}
   for line in window.ig.data.strany.split "\n"
     [vstrana, nazev, zkratka, barva] = line.split "\t"
     strany[vstrana] = {nazev, zkratka, barva}
-
 
   window.ig.senatori = senatori = {}
   for senator in ig.data.senat.split "\n"
