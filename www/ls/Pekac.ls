@@ -19,7 +19,6 @@ window.ig.Pekac = class Pekac implements utils.supplementalMixin
       ..domain [0 1]
       ..range [1 80]
 
-
   redraw: ->
     if @data.okrsky_celkem == @data.okrsky_spocteno
       @heading.html "Celkové výsledky komunálních voleb"

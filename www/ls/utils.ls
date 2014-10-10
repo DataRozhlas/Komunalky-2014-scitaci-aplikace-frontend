@@ -112,7 +112,10 @@ utils.percentage = ->
 
 barvaIterator = 140
 barvyAssigned = {}
-utils.resetStranyColors = -> barvyAssigned := {}
+utils.resetStranyColors = ->
+  barvyAssigned := {}
+  barvaIterator := 140
+
 utils.getStranaColor = (strana, fallback) ->
   barva = null
   id = null

@@ -16,13 +16,12 @@ window.ig.LiveUpdater = class LiveUpdater
 
   update: (dataType) ->
     return unless dataType
-    console.log dataType
     item = @downloadCache.items[dataType]
+    console.log dataType, item isnt void
     item?invalidate!
 
   getObecId: (code) ->
     code -= 20
-    console.log code
     if window.ig.suggester.suggestions
       obec = window.ig.suggester.suggestions[code]
       if obec
