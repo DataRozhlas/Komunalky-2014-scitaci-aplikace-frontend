@@ -82,7 +82,7 @@ window.ig.SenatKosti = class SenatKosti implements utils.supplementalMixin
     (err, data) <~ utils.download "//smzkomunalky.blob.core.windows.net/vysledky/senat.json"
     @data = data
     @data.obvody_array = for obvodId, datum of @data.obvody
-      datum.obvodId = (parseInt obvodId, 10) + 2 # HACK, remove
+      datum.obvodId = (parseInt obvodId, 10)
       datum.hlasu = 0
       for senator in datum.kandidati
         datum.hlasu += that if senator.hlasu

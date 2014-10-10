@@ -37,7 +37,7 @@ window.ig.Obec = class Obec
   display: ({id, okres, nazev}:data) ->
     @currentId = id
     @obecData = data
-    @obecData.obvodId = (parseInt data.senatObvod, 10) + 1 # HACK, remove
+    @obecData.obvodId = (parseInt data.senatObvod, 10)
     @heading.html "Výsledky v obci #nazev"
     @subHeading.html "okres #{okres.nazev}"
     @setMap data
