@@ -41,7 +41,7 @@ window.ig.Pekac = class Pekac implements utils.supplementalMixin
   init: ->
     @cacheItem = @downloadCache.getItem "obce"
     (err, data) <~ @cacheItem.get
-    @cacheItem.on \download @~saveData
+    @cacheItem.on \downloaded @~saveData
     @saveData data
 
   saveData: (data) ->

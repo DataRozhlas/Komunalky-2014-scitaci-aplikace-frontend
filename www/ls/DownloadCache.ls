@@ -36,6 +36,8 @@ class CacheItem
   get: (cb) ->
     if @valid
       cb null, @data
+    else if @downloading
+      @once \downloaded -> cb null it
     else
       <~ @download!
       cb null @data
@@ -47,7 +49,8 @@ class CacheItem
     @downloading = no
     @data = data
     @emit \downloaded data
-    cb null data
+    cb? null data
 
   invalidate: ->
-    ...
+    if @_events['downloaded']?length
+      @download!

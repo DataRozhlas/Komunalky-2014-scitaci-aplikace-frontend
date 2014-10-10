@@ -1,11 +1,5 @@
 init = ->
   new Tooltip!watchElements!
-  # es = new EventSource "http://localhost:8080/sse"
-  # es.onmessage = (event) ->
-  #   len = event.data.length
-  #   data = for i in [0 til len]
-  #     event.data.charCodeAt i
-  #   console.log data
   window.ig.strany = strany = {}
   for line in window.ig.data.strany.split "\n"
     [vstrana, nazev, zkratka, barva] = line.split "\t"
@@ -25,6 +19,10 @@ init = ->
   firstScreen =
     element: container.append \div .attr \class "firstScreen"
   window.ig.downloadCache = downloadCache = new window.ig.DownloadCache
+  liveUpdater = new window.ig.LiveUpdater downloadCache
+  # setTimeout do
+  #   -> liveUpdater.update "obce"
+  #   1000
   senatKosti = new window.ig.SenatKosti firstScreen.element, downloadCache
     ..init!
   suggesterContainer = firstScreen.element.append \div

@@ -1,11 +1,11 @@
 utils = window.ig.utils
 senatStrany =
-  "KSČM"    : [1 \#e3001a ]
-  "ČSSD"    : [2 \#f29400 ]
-  "SZ"      : [3 \#0FB103 ]
+  "KSČM"    : [6 \#e3001a ]
+  "ČSSD"    : [1 \#f29400 ]
+  "SZ"      : [5 \#0FB103 ]
   "ANO2011" : [4 \#84d0f1 ]
-  "KDU-ČSL" : [5 \#FEE300 ]
-  "ODS"     : [6 \#006ab3 ]
+  "KDU-ČSL" : [3 \#FEE300 ]
+  "ODS"     : [2 \#006ab3 ]
   "TOP09"   : [7 \#7c0042 ]
 
 window.ig.SenatOverview = class SenatOverview

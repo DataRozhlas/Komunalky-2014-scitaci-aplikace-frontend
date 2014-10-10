@@ -75,8 +75,8 @@ window.ig.SenatKosti = class SenatKosti implements utils.supplementalMixin
         out += "<br>Obvod obhajuje #{window.ig.strany[strana].zkratka}"
         out
     utils.resetStranyColors!
-    @kostiFirst.style \background-color -> utils.getStranaColor it.data.kandidati.0.data
-    @kostiSecond.style \background-color -> utils.getStranaColor it.data.kandidati.1.data
+    @kostiFirst.style \background-color -> utils.getStranaColor it.data.kandidati.0.data, '#aaa'
+    @kostiSecond.style \background-color -> utils.getStranaColor it.data.kandidati.1.data, '#aaa'
     @kostiPrevious.style \background-color ->
       strana = barvy[it.data.obvodId] || defaultBarva
       window.ig.strany[strana].barva

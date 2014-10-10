@@ -2,6 +2,7 @@
 window.ig.Events = (target = null) ->
   events = {}
   target ?= @
+  target._events = events
 
   target.on = (type, func) ->
     events[type] ?= []
@@ -10,7 +11,6 @@ window.ig.Events = (target = null) ->
   target.once = (type, func) ->
     f = ->
       func ...
-      console.log @
       target.off type, @
     target.on type, f
 

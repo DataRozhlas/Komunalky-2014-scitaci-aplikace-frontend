@@ -113,7 +113,7 @@ utils.percentage = ->
 barvaIterator = 140
 barvyAssigned = {}
 utils.resetStranyColors = -> barvyAssigned := {}
-utils.getStranaColor = (strana) ->
+utils.getStranaColor = (strana, fallback) ->
   barva = null
   id = null
   if typeof! strana is 'Object'
@@ -128,14 +128,17 @@ utils.getStranaColor = (strana) ->
   if barva
     that
   else
-    if id and barvyAssigned[id]
-      barvyAssigned[id]
+    if fallback
+      fallback
     else
-      barvaIterator += 40
-      barvaIterator %= 220
-      if barvaIterator < 100
-        barvaIterator := 100
-      barva = "rgb(#barvaIterator,#barvaIterator,#barvaIterator)"
-      if id != null
-        barvyAssigned[id] = barva
-      barva
+      if id and barvyAssigned[id]
+        barvyAssigned[id]
+      else
+        barvaIterator += 40
+        barvaIterator %= 220
+        if barvaIterator < 100
+          barvaIterator := 100
+        barva = "rgb(#barvaIterator,#barvaIterator,#barvaIterator)"
+        if id != null
+          barvyAssigned[id] = barva
+        barva
