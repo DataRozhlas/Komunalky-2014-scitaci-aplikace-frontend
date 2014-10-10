@@ -1,6 +1,6 @@
 utils = window.ig.utils
 window.ig.Pekac = class Pekac implements utils.supplementalMixin
-  (@baseElement, @strany) ->
+  (@baseElement, @strany, @downloadCache) ->
     @element = @baseElement.append \div
       ..attr \class \pekac
     @heading = @element.append \h2
@@ -21,7 +21,6 @@ window.ig.Pekac = class Pekac implements utils.supplementalMixin
 
 
   redraw: ->
-    <~ @download
     if @data.okrsky_celkem == @data.okrsky_spocteno
       @heading.html "Celkové výsledky komunálních voleb"
     @hlasu = @data.hlasu
@@ -39,15 +38,21 @@ window.ig.Pekac = class Pekac implements utils.supplementalMixin
         ..style \background-color ~>
           utils.getStranaColor it.strana
 
-  download: (cb) ->
-    (err, data) <~ utils.download "//smzkomunalky.blob.core.windows.net/vysledky/obce.json"
+  init: ->
+    @cacheItem = @downloadCache.getItem "obce"
+    (err, data) <~ @cacheItem.get
+    @cacheItem.on \download @~saveData
+    @saveData data
+
+  saveData: (data) ->
     @data = data
     @data.strany.sort (a, b) -> b.hlasu - a.hlasu
     @data.strany.forEach (d, i) ~>
       d.strana = @strany[d.id]
       d.index = i
-    @y.domain [0 @data.strany.0.hlasu]
-    cb!
+    @y.domain [0 @data.strany.0.hlasu] if @data.strany.length
+    @nextPage.classed \disabled @data.strany.length == 0
+    @redraw!
 
   initElms: ->
     it

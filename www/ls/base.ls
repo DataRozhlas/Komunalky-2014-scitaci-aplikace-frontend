@@ -29,8 +29,8 @@ init = ->
     ..init!
   suggesterContainer = firstScreen.element.append \div
     ..attr \class \suggester-container
-  pekac = new window.ig.Pekac firstScreen.element, strany
-    ..redraw!
+  pekac = new window.ig.Pekac firstScreen.element, strany, downloadCache
+    ..init!
   obec = new window.ig.Obec container, strany, downloadCache
     ..element.classed \disabled yes
   senat = new window.ig.SenatOverview container, downloadCache

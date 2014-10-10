@@ -10,18 +10,14 @@ window.ig.DownloadCache = class DownloadCache
     cb null, item.data
 
   getItem: (dataType) ->
-    it = if @items[dataType] then that else @create dataType
-    if dataType == "senat"
-      console.log 'foo'
-      it.on \download console.log
-    it
+    if @items[dataType] then that else @create dataType
 
   create: (dataType) ->
     url = switch dataType
       | "senat"
         @prefix + "senat.json"
       | "obce"
-        ...
+        @prefix + "obce.json"
       | otherwise
         @prefix + dataType + ".json"
     @items[dataType] = new CacheItem url

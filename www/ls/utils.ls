@@ -69,8 +69,12 @@ utils.supplementalMixin =
       sectenoPerc = "99,9"
     @sectenoValue.html "#{sectenoPerc} %"
     @sectenoFill.style \width "#{@data.okrsky_spocteno / @data.okrsky_celkem * 100}%"
-    @ucastValue.html   "#{utils.percentage @data.volilo / @data.volicu} %"
-    @ucastFill.style \width "#{@data.volilo / @data.volicu * 100}%"
+    if @data.volicu
+      @ucastValue.html   "#{utils.percentage @data.volilo / @data.volicu} %"
+      @ucastFill.style \width "#{@data.volilo / @data.volicu * 100}%"
+    else
+      @ucastValue.html   "&ndash;"
+      @ucastFill.style \width "0%"
 
   drawSupplemental: ->
     @supplemental = @element.append \div
