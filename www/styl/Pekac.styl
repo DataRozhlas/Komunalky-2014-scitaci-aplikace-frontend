@@ -34,6 +34,7 @@
         overflow hidden
         text-overflow ellipsis
         white-space nowrap
+        font-weight bold
       .result
         display block
         text-align center
@@ -42,8 +43,14 @@
         bottom 0px
         left 0px
         width 50px
-        background #aaa
+        background lighten(ColorHeadingLink, 50%) iurl('graph_bg.png')
         transition height 0.6s
+      .barColor
+        position absolute
+        bottom 0px
+        left 0px
+        width 50px
+        height 10px
 
   .paginator
     position absolute
