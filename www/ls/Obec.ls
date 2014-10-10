@@ -163,15 +163,15 @@ window.ig.Obec = class Obec
     @redrawFifty!
 
   redrawFifty: ->
-    @currentKosti.selectAll \div.fiftyHeadline .data [0] .enter!append \div
+    @currentKosti.selectAll \div.fiftyHeadline .data (-> [it]) .enter!append \div
       ..attr \class \fiftyHeadline
       ..html "Polovina mandátů"
       ..append \div
         ..attr \class \arrow
     @currentKosti.selectAll \div.fiftyHeadline
       ..style \left (d, i, ii) ~>
-        i = @kosti[ii].data.zastupitele.length / 2
-        "#{(Math.ceil i / @kosti[ii].rows) * @kostSide}px"
+        i = d.data.zastupitele.length / 2
+        "#{(Math.ceil i / d.rows) * @kostSide}px"
     @currentKosti.selectAll \div.fiftyBg
       .data (-> [0 til Math.ceil it.data.zastupitele.length / 2])
         ..exit!remove!
