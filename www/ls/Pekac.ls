@@ -71,10 +71,10 @@ window.ig.Pekac = class Pekac implements utils.supplementalMixin
           ..html ~> "#{utils.percentage it.hlasu / @hlasu} %"
       ..append \div
         ..attr \class \barArea
-      ..append \div
-        ..attr \class \barColor
-        ..style \background-color ~>
-          utils.getStranaColor it.strana
+        ..append \div
+          ..attr \class \barColor
+          ..style \background-color ~>
+            utils.getStranaColor it.strana
 
   movePage: (dir) ->
     @currentPage -= dir
