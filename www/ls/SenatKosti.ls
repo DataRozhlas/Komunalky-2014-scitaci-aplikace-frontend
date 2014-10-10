@@ -37,7 +37,7 @@ barvy =
 defaultBarva = 7
 
 window.ig.SenatKosti = class SenatKosti implements utils.supplementalMixin
-  (@baseElement) ->
+  (@baseElement, @downloadCache) ->
     @element = @baseElement.append \div
       ..attr \class \senatKosti
     @heading = @element.append \h2
@@ -66,8 +66,11 @@ window.ig.SenatKosti = class SenatKosti implements utils.supplementalMixin
         strana = barvy[obvod.data.obvodId] || defaultBarva
         out = "<b>Senátní obvod č. #{obvod.data.obvodId}: #{@obvody_meta[obvod.data.obvodId].nazev}</b><br>"
         out += obvod.data.kandidati.slice 0, 2
-          .map (kandidat) ->
-            "#{kandidat.data.jmeno} <b>#{kandidat.data.prijmeni}</b>: <b>#{utils.percentage kandidat.hlasu / obvod.data.hlasu} %</b> (#{kandidat.data.zkratka}, #{kandidat.hlasu} hl.)"
+          .map (kandidat, i) ->
+            if kandidat.data
+              "#{kandidat.data.jmeno} <b>#{kandidat.data.prijmeni}</b>: <b>#{utils.percentage kandidat.hlasu / obvod.data.hlasu} %</b> (#{kandidat.data.zkratka}, #{kandidat.hlasu} hl.)"
+            else if i == 0
+              "Zatím neznámý"
           .join "<br>"
         out += "<br>Obvod obhajuje #{window.ig.strany[strana].zkratka}"
         out
@@ -78,8 +81,15 @@ window.ig.SenatKosti = class SenatKosti implements utils.supplementalMixin
       strana = barvy[it.data.obvodId] || defaultBarva
       window.ig.strany[strana].barva
 
-  download: (cb) ->
-    (err, data) <~ utils.download "//smzkomunalky.blob.core.windows.net/vysledky/senat.json"
+  init: (cb) ->
+    @cacheItem = @downloadCache.getItem "senat"
+    (err, data) <~ @cacheItem.get
+    @cacheItem.on \downloaded (data) ~> @saveData data
+    @saveData data
+    cb?!
+
+  saveData: (data) ->
+    return unless data
     @data = data
     @data.obvody_array = for obvodId, datum of @data.obvody
       datum.obvodId = (parseInt obvodId, 10)
@@ -93,7 +103,7 @@ window.ig.SenatKosti = class SenatKosti implements utils.supplementalMixin
       datum
     for datum, index in @data.obvody_array
       @obvody[index].data = datum
-    cb?!
+    @redraw!
 
   drawEmptyBoxes: ->
     container = @element.append \div

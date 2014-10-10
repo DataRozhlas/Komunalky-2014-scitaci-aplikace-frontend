@@ -59,8 +59,8 @@ init = ->
   firstScreen =
     element: container.append \div .attr \class "firstScreen"
   window.ig.downloadCache = downloadCache = new window.ig.DownloadCache
-  senatKosti = new window.ig.SenatKosti firstScreen.element
-    ..download senatKosti~redraw
+  senatKosti = new window.ig.SenatKosti firstScreen.element, downloadCache
+    ..init!
   suggesterContainer = firstScreen.element.append \div
     ..attr \class \suggester-container
   pekac = new window.ig.Pekac firstScreen.element, strany
@@ -77,10 +77,10 @@ init = ->
   window.ig.suggester = suggester = new window.ig.Suggester suggesterContainer
     ..on \selected displaySwitcher~switchTo
   <~ window.ig.suggester.downloadSuggestions!
-  pha = window.ig.suggester.suggestions
-    .filter -> it.id == 539694
-    .pop!
-  displaySwitcher.switchTo pha
+  # pha = window.ig.suggester.suggestions
+  #   .filter -> it.id == 539694
+  #   .pop!
+  # displaySwitcher.switchTo pha
 
 
 if d3?

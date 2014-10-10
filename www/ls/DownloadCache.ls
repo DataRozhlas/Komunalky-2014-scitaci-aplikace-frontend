@@ -1,7 +1,8 @@
 window.ig.DownloadCache = class DownloadCache
   ->
     @items = {}
-    @prefix = "//smzkomunalky.blob.core.windows.net/vysledky/"
+    # @prefix = "//smzkomunalky.blob.core.windows.net/vysledky/"
+    @prefix = "/komunalky-14-backend/data/output_formatted/"
 
   get: (dataType, cb) ->
     item = @getItem dataType
@@ -9,7 +10,11 @@ window.ig.DownloadCache = class DownloadCache
     cb null, item.data
 
   getItem: (dataType) ->
-    if @items[dataType] then that else @create dataType
+    it = if @items[dataType] then that else @create dataType
+    if dataType == "senat"
+      console.log 'foo'
+      it.on \download console.log
+    it
 
   create: (dataType) ->
     url = switch dataType

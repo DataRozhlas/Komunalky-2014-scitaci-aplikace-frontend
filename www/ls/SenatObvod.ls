@@ -24,16 +24,24 @@ window.ig.SenatObvod = class SenatObvod
       ..attr \class (d, i) -> "kandidat kandidat-#i"
       ..append \span
         ..attr \class \name
-        ..html ~> "#{it.data.jmeno} #{it.data.prijmeni}"
+        ..html ~>
+          if it.data
+            "#{it.data.jmeno} #{it.data.prijmeni}"
+          else
+            "Zatím neznámý"
       ..append \span
         ..attr \class \procent
         ..html ~> " #{utils.percentage it.hlasu / celkemHlasu} %"
       ..append \span
         ..attr \class \strana-kost
-        ..style \background-color ~> it.data.barva || '#aaa'
+        ..style \background-color ~> it.data?barva || '#aaa'
       ..append \span
         ..attr \class \strana
-        ..html ~> " (#{it.data.zkratka || it.data.strana})"
+        ..html ~>
+          if it.data
+            " (#{it.data.zkratka || it.data.strana})"
+          else
+            void
       ..append \span
         ..attr \class \delim
         ..html ", "

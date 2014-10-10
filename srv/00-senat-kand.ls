@@ -4,7 +4,7 @@ require! {
   iconv.Iconv
 }
 suffix = "_2010"
-# suffix = ""
+suffix = ""
 iconv = new Iconv 'cp1250' 'utf-8'
 zkratky_barvas =
   "KDU-ČSL"      : '#FEE300'

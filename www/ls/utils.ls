@@ -64,11 +64,11 @@ utils.download = (url, cb) ->
 
 utils.supplementalMixin =
   updateSupplemental: ->
-    sectenoPerc = utils.percentage @data.okrsky_celkem / @data.okrsky_spocteno
+    sectenoPerc = utils.percentage @data.okrsky_spocteno / @data.okrsky_celkem
     if sectenoPerc == "100,0" and @data.okrsky_celkem != @data.okrsky_spocteno
       sectenoPerc = "99,9"
     @sectenoValue.html "#{sectenoPerc} %"
-    @sectenoFill.style \width "#{@data.okrsky_celkem / @data.okrsky_spocteno * 100}%"
+    @sectenoFill.style \width "#{@data.okrsky_spocteno / @data.okrsky_celkem * 100}%"
     @ucastValue.html   "#{utils.percentage @data.volilo / @data.volicu} %"
     @ucastFill.style \width "#{@data.volilo / @data.volicu * 100}%"
 

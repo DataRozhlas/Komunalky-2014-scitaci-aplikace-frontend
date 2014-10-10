@@ -126,15 +126,18 @@ window.ig.SenatOverview = class SenatOverview
     @oldSenatObvody
     @newSenatObvody.filter (.new)
       ..selectAll \.first
-        ..style \background-color (it, i) -> it.new.kandidati.0.data.barva || utils.getStranaColor i
+        ..style \background-color (it, i) -> it.new.kandidati.0.data?barva || utils.getStranaColor i
       ..selectAll \.second
-        ..style \background-color (it, i) -> it.new.kandidati.1.data.barva || utils.getStranaColor i
+        ..style \background-color (it, i) -> it.new.kandidati.1.data?barva || utils.getStranaColor i
       ..attr \data-tooltip ~>
         out = ""
         out += "<b>Senátní obvod č. #{it.obvodId}: #{@obvody_meta[it.obvodId].nazev}</b><br>"
         out += it.new.kandidati.slice 0, 2
-          .map (kandidat) ->
-            "#{kandidat.data.jmeno} <b>#{kandidat.data.prijmeni}</b>: <b>#{utils.percentage kandidat.hlasu / it.new.hlasu} %</b> (#{kandidat.data.zkratka}, #{kandidat.hlasu} hl.)"
+          .map (kandidat, i) ->
+            if kandidat.data
+              "#{kandidat.data.jmeno} <b>#{kandidat.data.prijmeni}</b>: <b>#{utils.percentage kandidat.hlasu / it.new.hlasu} %</b> (#{kandidat.data.zkratka}, #{kandidat.hlasu} hl.)"
+            else if i == 0
+              "Zatím neznámý"
           .join "<br>"
         out += "<br>Obvod obhajuje #{it.old.jmeno}, #{it.old.strana}"
         out
