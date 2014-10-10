@@ -11,9 +11,20 @@ window.ig.LiveUpdater = class LiveUpdater
         | 2 => @update "senat"
         | 4, 5 => void
         | 6 => window.location.reload!
-        | otherwise => @update that
+        | otherwise =>
+          @update @getObecId code
 
   update: (dataType) ->
+    return unless dataType
+    console.log dataType
     item = @downloadCache.items[dataType]
     item?invalidate!
 
+  getObecId: (code) ->
+    code -= 20
+    console.log code
+    if window.ig.suggester.suggestions
+      obec = window.ig.suggester.suggestions[code]
+      if obec
+        return obec.id
+    return null

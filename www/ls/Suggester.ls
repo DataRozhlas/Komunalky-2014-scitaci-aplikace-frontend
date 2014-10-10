@@ -132,4 +132,5 @@ window.ig.Suggester = class Suggester
       id = parseInt id, 10
       nazevSearchable = nazev.toLowerCase!
       {lat, lon, id, okres, nazev, nazevSearchable, east, south, west, north, senatObvod}
+    @suggestions.sort (a, b) -> a.id - b.id
     cb?!

@@ -54,3 +54,5 @@ class CacheItem
   invalidate: ->
     if @_events['downloaded']?length
       @download!
+    else
+      @valid = no
