@@ -37,8 +37,6 @@ window.ig.Pekac = class Pekac implements utils.supplementalMixin
         Získala #{utils.percentage it.hlasu / @hlasu} % hlasů"
       ..select \.barArea
         ..style \height ~> "#{@y it.hlasu}%"
-        ..style \background-color ~>
-          utils.getStranaColor it.strana
 
   init: ->
     @cacheItem = @downloadCache.getItem "obce"
@@ -73,6 +71,10 @@ window.ig.Pekac = class Pekac implements utils.supplementalMixin
           ..html ~> "#{utils.percentage it.hlasu / @hlasu} %"
       ..append \div
         ..attr \class \barArea
+      ..append \div
+        ..attr \class \barColor
+        ..style \background-color ~>
+          utils.getStranaColor it.strana
 
   movePage: (dir) ->
     @currentPage -= dir
