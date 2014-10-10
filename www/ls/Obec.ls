@@ -121,9 +121,9 @@ window.ig.Obec = class Obec
     @currentKost = @currentKosti.selectAll \.kost.active
       ..style \background-color (d) -> utils.getStranaColor d.strana.id, 'd'
       ..style "top" (d, i, ii) ~>
-          "#{(i % @kosti[ii].rows) * @kostSide}px"
+          "#{(i % d.parent.rows) * @kostSide}px"
       ..style "left" (d, i, ii) ~>
-          "#{(Math.floor i / @kosti[ii].rows) * @kostSide}px"
+          "#{(Math.floor i / d.parent.rows) * @kostSide}px"
       ..classed \changed (d, i, ii) ->
         return false if -1 != @className.indexOf 'activating'
         current = strany[d.strana.id]?barva
@@ -157,9 +157,9 @@ window.ig.Obec = class Obec
         zastupitel.index = index
     @currentKost
       ..style "top" (d, i, ii) ~>
-            "#{(d.index % @kosti[ii].rows) * @kostSide}px"
+            "#{(d.index % d.parent.rows) * @kostSide}px"
       ..style "left" (d, i, ii) ~>
-          "#{(Math.floor d.index / @kosti[ii].rows) * @kostSide}px"
+          "#{(Math.floor d.index / d.parent.rows) * @kostSide}px"
     @redrawFifty!
 
   redrawFifty: ->
@@ -173,15 +173,15 @@ window.ig.Obec = class Obec
         i = d.data.zastupitele.length / 2
         "#{(Math.ceil i / d.rows) * @kostSide}px"
     @currentKosti.selectAll \div.fiftyBg
-      .data (-> [0 til Math.ceil it.data.zastupitele.length / 2])
+      .data (-> it.data.zastupitele.slice 0, Math.ceil it.data.zastupitele.length / 2)
         ..exit!remove!
         ..enter!append \div
           ..attr \class \fiftyBg
     @currentKosti.selectAll \div.fiftyBg
       ..style "top" (d, i, ii) ~>
-        "#{(i % @kosti[ii].rows) * @kostSide}px"
+        "#{(i % d.parent.rows) * @kostSide}px"
       ..style "left" (d, i, ii) ~>
-        "#{(Math.floor i / @kosti[ii].rows) * @kostSide}px"
+        "#{(Math.floor i / d.parent.rows) * @kostSide}px"
 
   download: (id, cb) ->
     (err, data) <~ @downloadCache.get id
@@ -209,9 +209,8 @@ window.ig.Obec = class Obec
 
 
   mergeData: (type, data) ->
-    packet =
-      type: type
-      data: mergeObvody data
+    packet = type: type
+    packet.data = mergeObvody data, packet
     if @kostiAssoc[type]
       @kostiAssoc[type].data = packet.data
     else
@@ -275,7 +274,7 @@ window.ig.Obec = class Obec
     index = @favouriteStrany.indexOf id
     @favouriteStrany.splice index, 1 if index != -1
 
-mergeObvody = (data) ->
+mergeObvody = (data, parent) ->
   data.zastupitele = []
   for obvod in data.obvody
     obvod.hlasu = 0
@@ -295,9 +294,11 @@ mergeObvody = (data) ->
             strana: stranaData
             poradi: zastupitelIndex + 1
             hlasu: zastupitel.hlasu
+            parent: parent
       else if strana.zastupitelu
         for zastupitelIndex in [0 til strana.zastupitelu]
           data.zastupitele.push do
             strana: stranaData
             poradi: zastupitelIndex + 1
+            parent: parent
   data
