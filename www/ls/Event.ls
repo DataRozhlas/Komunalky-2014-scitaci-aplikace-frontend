@@ -11,7 +11,7 @@ window.ig.Events = (target = null) ->
   target.once = (type, func) ->
     f = ->
       func ...
-      target.off type, @
+      target.off type, f
     target.on type, f
 
   target.off = (type, func) ->
