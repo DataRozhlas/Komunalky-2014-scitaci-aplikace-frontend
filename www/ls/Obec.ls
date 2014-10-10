@@ -43,9 +43,7 @@ window.ig.Obec = class Obec
     @setMap data
     @unsetData 'obec_2010'
     @unsetData 'mcmo_2010'
-    <~ @download id
-    @resort!
-    @redraw!
+    @download id
 
   redraw: ->
     top = @drawKosti!
@@ -184,15 +182,22 @@ window.ig.Obec = class Obec
         "#{(Math.floor i / d.parent.rows) * @kostSide}px"
 
   download: (id, cb) ->
-    (err, data) <~ @downloadCache.get id
-    return if id != @obecData.id
+    if @cacheItem then @cacheItem.off \downloaded @processData
+    @cacheItem = @downloadCache.getItem id
+    (err, data) <~ @cacheItem.get!
+    @cacheItem.on \downloaded @processData
+    @processData data, id
+
+  processData: (data, id) ~>
+    return if id and id != @obecData.id
     @data = data
     for type in <[mcmo obec]>
       if data[type]
         @mergeData type, data[type]
       else if @kostiAssoc[type]
         @unsetData type
-    cb?!
+    @resort!
+    @redraw!
 
   downloadOld: (cb) ->
     id = @currentId
