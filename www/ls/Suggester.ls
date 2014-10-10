@@ -9,13 +9,19 @@ window.ig.Suggester = class Suggester
   lastQuery: null
   (parentElement) ->
     window.ig.Events @
+    that = @
     onValue = @~onValue
     @suggestions = []
     @container = parentElement .append \div
       ..attr \class \subsetSelector-container
     @input = @container.append \input
       ..attr \placeholder \Adamov
-      ..on \focus @~downloadSuggestions
+      ..on \focus ->
+          that.downloadSuggestions!
+          that.suggestionsDisabled = no
+          that.onValue @value
+      ..on \blur ~>
+        setTimeout @~hideSuggestions, 200
       ..on \keyup -> onValue @value
       ..on \keydown ~>
         @suggestionsDisabled = no
