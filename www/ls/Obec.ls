@@ -1,4 +1,5 @@
 utils = window.ig.utils
+kostiSort = <[mcmo mcmo_2010 obec obec_2010]>
 window.ig.Obec = class Obec
   kostSide: 28
   (@parentElement, @strany, @downloadCache, @displaySwitcher) ->
@@ -13,6 +14,10 @@ window.ig.Obec = class Obec
       ..attr \class \okres
     topPart = @element.append \div
       ..attr \class \top-vyledky-voleb
+    @downloadOldLink = @element.append \div
+      ..attr \class \download-old
+      ..html "Porovnat s minulými volbami"
+      ..on \click @~downloadOld
     @kostiCont = topPart.append \div
       ..attr \class \kostiCont
     mapContainer = @element.append \div
@@ -26,13 +31,18 @@ window.ig.Obec = class Obec
     @senatElement = @senatContainer.append \div
       ..attr \class \senat-element
     @initFavouriteStrany!
+    @kosti = []
+    @kostiAssoc = {}
 
   display: ({id, okres, nazev}:data) ->
+    @currentId = id
     @obecData = data
     @obecData.obvodId = (parseInt data.senatObvod, 10) + 1 # HACK, remove
     @heading.html "Výsledky v obci #nazev"
     @subHeading.html "okres #{okres.nazev}"
     @setMap data
+    @unsetData 'obec_2010'
+    @unsetData 'mcmo_2010'
     <~ @download id
     @resort!
     @redraw!
@@ -64,10 +74,15 @@ window.ig.Obec = class Obec
     width = @kostiCont.0.0.offsetWidth - 68
     nadpisMargin = 40px
     kostiX = Math.floor width / @kostSide
-    @data.kosti.forEach ~>
+    @kosti.sort (a, b) ->
+      (kostiSort.indexOf a.type) - (kostiSort.indexOf b.type)
+    topCumm = 0
+    @kosti.forEach ~>
       it.rows = Math.ceil it.data.zastupitele.length / kostiX
       it.fullType = @getTypeHuman it
-    @kostiCont.selectAll \div.typ.active .data @data.kosti, (.fullType)
+      it.top = topCumm
+      topCumm += it.rows * @kostSide + nadpisMargin
+    @kostiCont.selectAll \div.typ.active .data @kosti, (.fullType)
       ..exit!
         ..classed \active no
         ..classed \deactivating yes
@@ -79,12 +94,9 @@ window.ig.Obec = class Obec
         ..append \h3
         ..append \div
           ..attr \class \kosti
-    topCumm = 0
     typy = @kostiCont.selectAll \div.typ.active
-      ..style \top ~>
-        top = topCumm
-        topCumm += it.rows * @kostSide + nadpisMargin
-        top + "px"
+      ..style \top ~> it.top + "px"
+
       ..select \h3
         ..html (.fullType)
 
@@ -109,9 +121,9 @@ window.ig.Obec = class Obec
     @currentKost = @currentKosti.selectAll \.kost.active
       ..style \background-color (d) -> utils.getStranaColor d.strana.id, 'd'
       ..style "top" (d, i, ii) ~>
-          "#{(i % @data.kosti[ii].rows) * @kostSide}px"
+          "#{(i % @kosti[ii].rows) * @kostSide}px"
       ..style "left" (d, i, ii) ~>
-          "#{(Math.floor i / @data.kosti[ii].rows) * @kostSide}px"
+          "#{(Math.floor i / @kosti[ii].rows) * @kostSide}px"
       ..classed \changed (d, i, ii) ->
         return false if -1 != @className.indexOf 'activating'
         current = strany[d.strana.id]?barva
@@ -138,16 +150,16 @@ window.ig.Obec = class Obec
     width = @kostiCont.0.0.offsetWidth - 68
     kostiX = Math.floor width / @kostSide
 
-    @data.kosti.forEach  ~>
+    @kosti.forEach  ~>
       it.rows = Math.ceil it.data.zastupitele.length / kostiX
       it.fullType = @getTypeHuman it
       for zastupitel, index in it.data.zastupitele
         zastupitel.index = index
     @currentKost
       ..style "top" (d, i, ii) ~>
-            "#{(d.index % @data.kosti[ii].rows) * @kostSide}px"
+            "#{(d.index % @kosti[ii].rows) * @kostSide}px"
       ..style "left" (d, i, ii) ~>
-          "#{(Math.floor d.index / @data.kosti[ii].rows) * @kostSide}px"
+          "#{(Math.floor d.index / @kosti[ii].rows) * @kostSide}px"
     @redrawFifty!
 
   redrawFifty: ->
@@ -158,8 +170,8 @@ window.ig.Obec = class Obec
         ..attr \class \arrow
     @currentKosti.selectAll \div.fiftyHeadline
       ..style \left (d, i, ii) ~>
-        i = @data.kosti[ii].data.zastupitele.length / 2
-        "#{(Math.ceil i / @data.kosti[ii].rows) * @kostSide}px"
+        i = @kosti[ii].data.zastupitele.length / 2
+        "#{(Math.ceil i / @kosti[ii].rows) * @kostSide}px"
     @currentKosti.selectAll \div.fiftyBg
       .data (-> [0 til Math.ceil it.data.zastupitele.length / 2])
         ..exit!remove!
@@ -167,24 +179,53 @@ window.ig.Obec = class Obec
           ..attr \class \fiftyBg
     @currentKosti.selectAll \div.fiftyBg
       ..style "top" (d, i, ii) ~>
-        "#{(i % @data.kosti[ii].rows) * @kostSide}px"
+        "#{(i % @kosti[ii].rows) * @kostSide}px"
       ..style "left" (d, i, ii) ~>
-        "#{(Math.floor i / @data.kosti[ii].rows) * @kostSide}px"
+        "#{(Math.floor i / @kosti[ii].rows) * @kostSide}px"
 
   download: (id, cb) ->
     (err, data) <~ @downloadCache.get id
     return if id != @obecData.id
     @data = data
-    @data.kosti = []
     for type in <[mcmo obec]>
       if data[type]
-        @data.kosti.push do
-          type: type
-          data: mergeObvody that
+        @mergeData type, data[type]
+      else if @kostiAssoc[type]
+        @unsetData type
     cb?!
 
+  downloadOld: (cb) ->
+    id = @currentId
+    (err, data) <~ utils.download "//smzkomunalky.blob.core.windows.net/vysledky10/#{id}.json"
+    return if err or id != @currentId
+    for type in <[mcmo obec]>
+      type_suff = type + "_2010"
+      if data[type]
+        @mergeData type_suff, data[type]
+      else if @kostiAssoc[type_suff]
+        @unsetData type_suff
+    @resort!
+    @redraw!
+
+
+  mergeData: (type, data) ->
+    packet =
+      type: type
+      data: mergeObvody data
+    if @kostiAssoc[type]
+      @kostiAssoc[type].data = packet.data
+    else
+      @kostiAssoc[type] = packet
+      @kosti.push packet
+
+  unsetData: (type) ->
+    return unless @kostiAssoc[type]
+    index = @kosti.indexOf @kostiAssoc[type]
+    @kosti.splice index, 1 if index != -1
+    delete @kostiAssoc[type]
+
   resort: ->
-    for {data} in @data.kosti
+    for {data} in @kosti
       data.zastupitele.sort (a, b) ~>
         | (@favouriteStrany.indexOf b.strana.id) - (@favouriteStrany.indexOf a.strana.id) => that
         | a.strana.id - b.strana.id => that
@@ -197,6 +238,9 @@ window.ig.Obec = class Obec
     | type is "obec" && @data.mcmo => "Magistrát"
     | type is "obec" => "Obecní zastupitelstvo"
     | type is "mcmo" => "Městská část"
+    | type is "obec_2010" && @data.mcmo => "Magistrát &ndash; 2010"
+    | type is "obec_2010" => "Obecní zastupitelstvo &ndash; 2010"
+    | type is "mcmo_2010" => "Městská část &ndash; 2010"
 
   setMap: (obec) ->
     if @map
