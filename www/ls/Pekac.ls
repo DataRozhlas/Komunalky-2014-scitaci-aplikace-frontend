@@ -32,6 +32,9 @@ window.ig.Pekac = class Pekac implements utils.supplementalMixin
     utils.resetStranyColors!
     @pager.selectAll \div.bar.active
       ..style \left ~> "#{@columnWidth * it.index}px"
+      ..attr \data-tooltip ~>
+        "<b>#{it.nazev}</b><br>
+        Získala #{utils.percentage it.hlasu / @hlasu} % hlasů"
       ..select \.barArea
         ..style \height ~> "#{@y it.hlasu}%"
         ..style \background-color ~>
