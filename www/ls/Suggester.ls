@@ -32,6 +32,8 @@ window.ig.Suggester = class Suggester
         | 13 => @onInputSubmitted @currentSuggestions[@currentSuggestionsIndex]
     @suggestionList = @container.append \ul
       ..attr \class \suggestionList
+    @backbutton = ig.utils.backbutton parentElement
+      ..classed \hidden yes
 
   onInputSubmitted: (item) ->
     if not item
@@ -39,6 +41,9 @@ window.ig.Suggester = class Suggester
     @suggestionsDisabled = yes
     @input.0.0.value = item.nazev
     @hideSuggestions!
+    @backbutton
+      ..on \click ~> @emit 'selected' item
+      ..classed \hidden no
     @emit 'selected' item
 
   onValue: (value) ->
