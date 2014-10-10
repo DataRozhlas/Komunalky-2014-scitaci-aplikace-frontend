@@ -80,6 +80,7 @@ window.ig.Obec = class Obec
       it.fullType = @getTypeHuman it
       it.top = topCumm
       topCumm += it.rows * @kostSide + nadpisMargin
+
     @kostiCont.selectAll \div.typ.active .data @kosti, (.fullType)
       ..exit!
         ..classed \active no
@@ -94,7 +95,6 @@ window.ig.Obec = class Obec
           ..attr \class \kosti
     typy = @kostiCont.selectAll \div.typ.active
       ..style \top ~> it.top + "px"
-
       ..select \h3
         ..html (.fullType)
 
@@ -118,10 +118,10 @@ window.ig.Obec = class Obec
     utils.resetStranyColors!
     @currentKost = @currentKosti.selectAll \.kost.active
       ..style \background-color (d) -> utils.getStranaColor d.strana.id, 'd'
-      ..style "top" (d, i, ii) ~>
-          "#{(i % d.parent.rows) * @kostSide}px"
-      ..style "left" (d, i, ii) ~>
-          "#{(Math.floor i / d.parent.rows) * @kostSide}px"
+      ..style "top" (d) ~>
+          "#{(d.index % d.parent.rows) * @kostSide}px"
+      ..style "left" (d) ~>
+          "#{(Math.floor d.index / d.parent.rows) * @kostSide}px"
       ..classed \changed (d, i, ii) ->
         return false if -1 != @className.indexOf 'activating'
         current = strany[d.strana.id]?barva
@@ -140,6 +140,7 @@ window.ig.Obec = class Obec
         out += "#{@strany[it.strana.id]?.zkratka || it.strana.nazev} získala #{utils.percentage it.strana.procent} % hlasů, #{it.strana.zastupitelu} zastupitelů<br>"
         out += "<em>Klikněte pro přiřazení strany do koalice</em>"
         out
+
     if @favouriteStrany.length
       @redrawFifty!
     topCumm
@@ -151,8 +152,6 @@ window.ig.Obec = class Obec
     @kosti.forEach  ~>
       it.rows = Math.ceil it.data.zastupitele.length / kostiX
       it.fullType = @getTypeHuman it
-      for zastupitel, index in it.data.zastupitele
-        zastupitel.index = index
     @currentKost
       ..style "top" (d, i, ii) ~>
             "#{(d.index % d.parent.rows) * @kostSide}px"
@@ -215,7 +214,7 @@ window.ig.Obec = class Obec
 
   mergeData: (type, data) ->
     packet = type: type
-    packet.data = mergeObvody data, packet
+    packet.data = mergeObvody data, @kostiAssoc[type] || packet
     if @kostiAssoc[type]
       @kostiAssoc[type].data = packet.data
     else
@@ -237,6 +236,8 @@ window.ig.Obec = class Obec
         | a.prijmeni > b.prijmeni => +1
         | a.prijmeni < a.prijmeni => -1
         | otherwise               =>  0
+      for zastupitel, index in data.zastupitele
+        zastupitel.index = index
 
   getTypeHuman: ({type}) ->
     | type is "obec" && @data.mcmo => "Magistrát"
