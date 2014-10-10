@@ -24,9 +24,29 @@
         background lighten(ColorHeading, 90%)
   .senat-overview
     height 120px
-    margin-top 30px
+    margin-top 43px
     margin-left 68px
     position relative
+    &.new-senat
+      margin-top 48px
+    h3
+      position absolute
+      top -26px
+    .senat-popisky
+      position absolute
+      bottom -13px
+      left -3px
+      .popisek
+        width 60px
+        position absolute
+        bottom 0px
+        font-size 0.7em
+        text-transform uppercase
+      .arrow
+        position absolute
+        top -5px
+        left 0px
+        triangle(8px, 5px, 'top', ColorHeading)
     .obvod
       position absolute
       width 20px

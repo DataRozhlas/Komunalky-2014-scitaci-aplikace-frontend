@@ -2,11 +2,11 @@ utils = window.ig.utils
 senatStrany =
   "KSČM"    : [1 \#e3001a ]
   "ČSSD"    : [2 \#f29400 ]
-  "ANO2011" : [3 \#84d0f1 ]
-  "KDU-ČSL" : [4 \#FEE300 ]
-  "ODS"     : [5 \#006ab3 ]
-  "TOP09"   : [6 \#7c0042 ]
-  "SZ"      : [7 \#0FB103 ]
+  "SZ"      : [3 \#0FB103 ]
+  "ANO2011" : [4 \#84d0f1 ]
+  "KDU-ČSL" : [5 \#FEE300 ]
+  "ODS"     : [6 \#006ab3 ]
+  "TOP09"   : [7 \#7c0042 ]
 
 window.ig.SenatOverview = class SenatOverview
   (@parentElement, @downloadCache, @displaySwitcher) ->
@@ -18,9 +18,13 @@ window.ig.SenatOverview = class SenatOverview
       ..html "Průběžné výsledky senátních voleb"
     @obvody_meta = window.ig.senat_obvody_meta
     @oldSenatElm = @scrollable.append \div
+      ..append \h3 .html "Dosavadní složení senátu"
       ..attr \class "old-senat senat-overview"
     @newSenatElm = @scrollable.append \div
+      ..append \h3 .html "Volené mandáty"
       ..attr \class "new-senat senat-overview"
+    @senatPopisky = @oldSenatElm.append \div
+      ..attr \class \senat-popisky
     @obvodyElm = @scrollable.append \div
       ..attr \class \obvody
 
@@ -75,6 +79,12 @@ window.ig.SenatOverview = class SenatOverview
         lastStrana = senator.ordering
         col += 1.5
         row = 0
+        @senatPopisky.append \div
+          ..html -> senator.old.strana
+          ..style \left "#{col * kostSide}px"
+          ..attr \class \popisek
+          ..append \div
+            ..attr \class \arrow
       if row >= rows
         row = 0
         col++
@@ -99,6 +109,7 @@ window.ig.SenatOverview = class SenatOverview
         out += "<b>Senátní obvod č. #{it.obvodId}: #{@obvody_meta[it.obvodId].nazev}</b><br>"
         out += "<br>Obvod obhajuje #{it.old.jmeno}, #{it.old.strana}"
         out
+
     @newSenatObvody = @newSenatElm.selectAll \div.new-obvod .data senatori .enter!append \div
       ..attr \class "obvod new-obvod"
       ..append \div .attr \class \old
