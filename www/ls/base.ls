@@ -21,7 +21,7 @@ init = ->
   window.ig.downloadCache = downloadCache = new window.ig.DownloadCache
   liveUpdater = new window.ig.LiveUpdater downloadCache
   # setTimeout do
-  #   -> liveUpdater.update "obce"
+  #   -> liveUpdater.update "539694"
   #   1000
   senatKosti = new window.ig.SenatKosti firstScreen.element, downloadCache
     ..init!
