@@ -207,7 +207,10 @@ window.ig.Obec = class Obec
     @map.setHighlight obec.id
 
   initFavouriteStrany: ->
-    @favouriteStrany = []
+    try
+      if window.localStorage?smz_vlb_favStrany
+        @favouriteStrany = JSON.parse window.localStorage.smz_vlb_favStrany
+    @favouriteStrany ?= []
 
   toggleFavouriteStrana: (id) ->
     index = @favouriteStrany.indexOf id
@@ -216,6 +219,8 @@ window.ig.Obec = class Obec
     else
       @removeFavouriteStrana id if index != -1
       @addFavouriteStrana id
+    try
+      window.localStorage.smz_vlb_favStrany = JSON.stringify @favouriteStrany
     @resort!
     @redrawSortOnly!
 
