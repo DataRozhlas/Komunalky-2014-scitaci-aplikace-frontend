@@ -79,7 +79,7 @@ window.ig.Suggester = class Suggester
       .classed \active yes
 
   showSuggestions: ->
-    @suggestionList.selectAll "li" .data @currentSuggestions, (.id)
+    @suggestionList.selectAll "li" .data @currentSuggestions
       ..enter!append \li
       ..exit!remove!
     @suggestionItems = @suggestionList.selectAll "li"
