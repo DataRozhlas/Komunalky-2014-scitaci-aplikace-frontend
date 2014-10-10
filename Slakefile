@@ -15,6 +15,7 @@ externalStyles =
 externalData =
   "strany": "#__dirname/data/strany.tsv"
   "senat":  "#__dirname/data/senat.tsv"
+  "old_senat": "#__dirname/data/old-senat.tsv"
   "senat_obvody":  "#__dirname/data/senat_obvody.tsv"
 
 preferScripts = <[ utils.js postInit.js _loadData.js ../data.js init.js _loadExternal.js]>

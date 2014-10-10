@@ -12,15 +12,64 @@
   h2
     margin-left 68px
     margin-top 23px
-  .obvod
-    float left
-    padding-top 10px
-    padding-bottom 10px
-    padding-left 68px
-    &:nth-child(2n)
-      background #eee
-    &.highlight
-      background lighten(ColorHeading, 90%)
+  .obvody
+    .obvod
+      float left
+      padding-top 10px
+      padding-bottom 10px
+      padding-left 68px
+      &:nth-child(2n)
+        background #eee
+      &.highlight
+        background lighten(ColorHeading, 90%)
+  .senat-overview
+    height 120px
+    margin-top 30px
+    margin-left 68px
+    position relative
+    .obvod
+      position absolute
+      width 20px
+      height 20px
+      opacity 1
+      &.contested
+        opacity 0.4
+      &.new-obvod .old
+        background #eee
+      &.new-obvod.contested
+        opacity 1
+        cursor pointer
+      &.old-obvod
+        cursor help
+      .old
+        position absolute
+        width 20px
+        height 20px
+        border-radius 2px
+      .first
+      .second
+        position absolute
+        width 10px
+        height 20px
+    .obvod-new
+        opacity 1
+        .old
+          opacity 0.4
+          border-radius 0px
+          top -3px
+          left -3px
+          width 26px
+          height 26px
+      .first
+        border-top-left-radius 3px
+        border-bottom-left-radius 3px
+        left 0px
+      .second
+        border-top-right-radius 3px
+        border-bottom-right-radius 3px
+        right 0px
+
+
   h3
     color ColorHeading
     float left

@@ -76,6 +76,7 @@ init = ->
     ..html "Zobrazit výsledky v obci"
   window.ig.suggester = suggester = new window.ig.Suggester suggesterContainer
     ..on \selected displaySwitcher~switchTo
+  displaySwitcher.switchTo 'senat'
   <~ window.ig.suggester.downloadSuggestions!
   # pha = window.ig.suggester.suggestions
   #   .filter -> it.id == 539694

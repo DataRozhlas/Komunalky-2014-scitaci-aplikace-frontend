@@ -1,4 +1,13 @@
 utils = window.ig.utils
+senatStrany =
+  "KSČM"    : [1 \#e3001a ]
+  "ČSSD"    : [2 \#f29400 ]
+  "ANO2011" : [3 \#84d0f1 ]
+  "KDU-ČSL" : [4 \#FEE300 ]
+  "ODS"     : [5 \#006ab3 ]
+  "TOP09"   : [6 \#7c0042 ]
+  "SZ"      : [7 \#0FB103 ]
+
 window.ig.SenatOverview = class SenatOverview
   (@parentElement, @downloadCache, @displaySwitcher) ->
     @element = @parentElement.append \div
@@ -8,6 +17,10 @@ window.ig.SenatOverview = class SenatOverview
     @scrollable.append \h2
       ..html "Průběžné výsledky senátních voleb"
     @obvody_meta = window.ig.senat_obvody_meta
+    @oldSenatElm = @scrollable.append \div
+      ..attr \class "old-senat senat-overview"
+    @newSenatElm = @scrollable.append \div
+      ..attr \class "new-senat senat-overview"
     @obvodyElm = @scrollable.append \div
       ..attr \class \obvody
 
@@ -15,13 +28,105 @@ window.ig.SenatOverview = class SenatOverview
       ..on \click ~> @displaySwitcher.switchTo \firstScreen
 
     (err, data) <~ @downloadCache.get "senat"
+    @oldSenat = {}
+    lf = String.fromCharCode 13
+    for line in window.ig.data.old_senat.split "\n"
+      [obvodId, jmeno, strana] = line.split "\t"
+      obvodId = parseInt obvodId, 10
+      continue unless obvodId
+      strana .= replace lf, ''
+      color = senatStrany[strana]?1
+      ordering = senatStrany[strana]?0 || 99
+      @oldSenat[obvodId] =
+        old: {jmeno, strana, color}
+        contested: data.obvody[obvodId] != void
+        ordering: ordering
+        obvodId: obvodId
     @obvodElements = {}
-    @senatObvody = for obvodId of data.obvody
+    @senatObvody = for obvodId, obvod of data.obvody
+      @oldSenat[obvodId].new = obvod
+      obvod.hlasu = 0
+      for kandidat in obvod.kandidati
+        obvod.hlasu += kandidat.hlasu
+
       @obvodElements[obvodId] = obvodElm = @obvodyElm.append \div
         ..attr \class \obvod
       obvodElm.append \h3
         ..html "#{@obvody_meta[obvodId].nazev}"
       new window.ig.SenatObvod obvodElm, obvodId
+    @drawAllSenat!
+    @updateAllSenat!
+
+  drawAllSenat: ->
+    kostSide = 28px
+    rows = 4
+    senatori = for obvod, senator of @oldSenat
+      senator
+    senatori.sort (a, b) ->
+      | a.ordering - b.ordering => that
+      | a.contested - b.contested => that
+      | a.obvodId - b.obvodId => that
+    row = -1
+    col = -1.5
+    lastStrana = null
+    for senator, index in senatori
+      row++
+      if lastStrana != senator.ordering
+        lastStrana = senator.ordering
+        col += 1.5
+        row = 0
+      if row >= rows
+        row = 0
+        col++
+      senator.row = row
+      senator.col = col
+    newSenatori = senatori.filter (.new)
+    utils.resetStranyColors!
+
+    @oldSenatObvody = @oldSenatElm.selectAll \div.old-obvod .data senatori .enter!append \div
+      ..attr \class "obvod old-obvod"
+      ..classed \contested (.contested)
+      ..style \left (d, i) ->
+        "#{d.col * kostSide}px"
+      ..style \top (d, i) ->
+        "#{d.row * kostSide}px"
+      ..append \div
+        ..attr \class \old
+        ..style \background-color (it, i) ->
+          it.old.color || \#999
+      ..attr \data-tooltip ~>
+        out = ""
+        out += "<b>Senátní obvod č. #{it.obvodId}: #{@obvody_meta[it.obvodId].nazev}</b><br>"
+        out += "<br>Obvod obhajuje #{it.old.jmeno}, #{it.old.strana}"
+        out
+    @newSenatObvody = @newSenatElm.selectAll \div.new-obvod .data senatori .enter!append \div
+      ..attr \class "obvod new-obvod"
+      ..append \div .attr \class \old
+      ..classed \contested (.new)
+      ..style \left (d, i) ->
+        "#{d.col * kostSide}px"
+      ..style \top (d, i) ->
+        "#{d.row * kostSide}px"
+      ..append \div .attr \class \first
+      ..append \div .attr \class \second
+      ..on \click ~> @highlight it.obvodId
+
+  updateAllSenat: ->
+    @oldSenatObvody
+    @newSenatObvody.filter (.new)
+      ..selectAll \.first
+        ..style \background-color (it, i) -> it.new.kandidati.0.data.barva || utils.getStranaColor i
+      ..selectAll \.second
+        ..style \background-color (it, i) -> it.new.kandidati.1.data.barva || utils.getStranaColor i
+      ..attr \data-tooltip ~>
+        out = ""
+        out += "<b>Senátní obvod č. #{it.obvodId}: #{@obvody_meta[it.obvodId].nazev}</b><br>"
+        out += it.new.kandidati.slice 0, 2
+          .map (kandidat) ->
+            "#{kandidat.data.jmeno} <b>#{kandidat.data.prijmeni}</b>: <b>#{utils.percentage kandidat.hlasu / it.new.hlasu} %</b> (#{kandidat.data.zkratka}, #{kandidat.hlasu} hl.)"
+          .join "<br>"
+        out += "<br>Obvod obhajuje #{it.old.jmeno}, #{it.old.strana}"
+        out
 
   highlight: (obvodId) ->
     obvodId = obvodId.toString!
