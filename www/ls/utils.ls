@@ -118,13 +118,13 @@ utils.getStranaColor = (strana) ->
   id = null
   if typeof! strana is 'Object'
     if strana.id
-      barva = strany[that].barva
+      barva = window.ig.strany[that].barva
       id = that
     else if strana.barva
       barva = that
   else if strana
     id = that
-    barva = strany[that]?barva
+    barva = window.ig.strany[that]?barva
   if barva
     that
   else
