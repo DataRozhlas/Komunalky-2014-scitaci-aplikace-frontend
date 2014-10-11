@@ -2,7 +2,7 @@ window.ig.LiveUpdater = class LiveUpdater
   (@downloadCache) ->
     @lastMessage = new Date!getTime!
     try
-      es = new EventSource "http://localhost:8080/sse"
+      es = new EventSource "/sse/"
       es.onmessage = (event) ~>
         @lastMessage = new Date!getTime!
         len = event.data.length
