@@ -40,8 +40,14 @@ window.ig.SenatKosti = class SenatKosti implements utils.supplementalMixin
   (@baseElement, @downloadCache) ->
     @element = @baseElement.append \div
       ..attr \class \senatKosti
-    @heading = @element.append \h2
+    heading = @element.append \h2
+    @heading = heading.append \span
+      ..attr \class \main
       ..html "Průběžné výsledky senatních voleb"
+    heading.append \span
+      ..attr \class \sub
+      ..html "Podrobné výsledky&hellip;"
+      ..on \click ~> @displaySwitcher.switchTo 'senat'
     @element.append \img
       ..attr \src './img/obvody.svg'
     @obvody = for [0 til 27] => {data: null}

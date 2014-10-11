@@ -37,7 +37,7 @@ init = ->
     ..element.classed \disabled yes
   senat = new window.ig.SenatOverview container, downloadCache
     ..element.classed \disabled yes
-  displaySwitcher = new window.ig.DisplaySwitcher do
+  window.ig.displaySwitcher = displaySwitcher = new window.ig.DisplaySwitcher do
     {firstScreen, obec, senat}
   obec.displaySwitcher = senat.displaySwitcher = senatKosti.displaySwitcher = displaySwitcher
   suggesterContainer.append \h2
