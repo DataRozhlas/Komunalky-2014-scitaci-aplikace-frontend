@@ -151,7 +151,7 @@ window.ig.Obec = class Obec
     strany = @strany
     utils.resetStranyColors!
     @currentKost = @currentKosti.selectAll \.kost.active
-      ..style \background-color (d) -> utils.getStranaColor d.strana.id, 'd'
+      ..style \background-color (d) -> utils.getStranaColor d.strana.id
       ..style "top" (d) ~>
           "#{(d.index % d.parent.rows) * @kostSide}px"
       ..style "left" (d) ~>
