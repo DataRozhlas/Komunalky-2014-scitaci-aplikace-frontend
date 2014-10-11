@@ -71,19 +71,28 @@ window.ig.SenatKosti = class SenatKosti implements utils.supplementalMixin
       ..attr \data-tooltip (obvod) ~>
         strana = barvy[obvod.data.obvodId] || defaultBarva
         out = "<b>Senátní obvod č. #{obvod.data.obvodId}: #{@obvody_meta[obvod.data.obvodId].nazev}</b><br>"
-        out += obvod.data.kandidati.slice 0, 2
-          .map (kandidat, i) ->
-            if kandidat.data
-              "#{kandidat.data.jmeno} <b>#{kandidat.data.prijmeni}</b>: <b>#{utils.percentage kandidat.hlasu / obvod.data.hlasu} %</b> (#{kandidat.data.zkratka}, #{kandidat.hlasu} hl.)"
-            else if i == 0
-              "Zatím neznámý"
-          .join "<br>"
+        if obvod.data.kandidati.0.hlasu
+          out += obvod.data.kandidati.slice 0, 2
+            .map (kandidat, i) ->
+              if kandidat.data
+                "#{kandidat.data.jmeno} <b>#{kandidat.data.prijmeni}</b>: <b>#{utils.percentage kandidat.hlasu / obvod.data.hlasu} %</b> (#{kandidat.data.zkratka}, #{kandidat.hlasu} hl.)"
+              else if i == 0
+                "Zatím neznámý"
+            .join "<br>"
         out += "<br>Obvod obhajuje #{window.ig.strany[strana].zkratka}"
         out += "<br><em>Klikněte pro podrobné výsledky</em>"
         out
     utils.resetStranyColors!
-    @kostiFirst.style \background-color -> utils.getStranaColor it.data.kandidati.0.data, '#aaa'
-    @kostiSecond.style \background-color -> utils.getStranaColor it.data.kandidati.1.data, '#aaa'
+    @kostiFirst.style \background-color ->
+      if it.data.kandidati.0.hlasu
+        utils.getStranaColor it.data.kandidati.0.data, '#aaa'
+      else
+        '#bbb'
+    @kostiSecond.style \background-color ->
+      if it.data.kandidati.1.hlasu
+        utils.getStranaColor it.data.kandidati.1.data, '#aaa'
+      else
+        '#bbb'
     @kostiPrevious.style \background-color ->
       strana = barvy[it.data.obvodId] || defaultBarva
       window.ig.strany[strana].barva

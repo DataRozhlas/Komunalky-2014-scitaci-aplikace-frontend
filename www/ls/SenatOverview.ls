@@ -116,7 +116,10 @@ window.ig.SenatOverview = class SenatOverview
       ..attr \data-tooltip ~>
         out = ""
         out += "<b>Senátní obvod č. #{it.obvodId}: #{@obvody_meta[it.obvodId].nazev}</b><br>"
-        out += "<br>Obvod obhajuje #{it.old.jmeno}, #{it.old.strana}"
+        if 0 == it.obvodId % 3
+          out += "<br>Obvod obhajuje #{it.old.jmeno}, #{it.old.strana}"
+        else
+          out += "<br>#{it.old.jmeno}, #{it.old.strana}"
         out
 
     @newSenatObvody = @newSenatElm.selectAll \div.new-obvod .data senatori .enter!append \div
@@ -132,23 +135,34 @@ window.ig.SenatOverview = class SenatOverview
       ..on \click ~> @highlight it.obvodId
 
   updateAllSenat: ->
-    @oldSenatObvody
     @newSenatObvody.filter (.new)
       ..selectAll \.first
-        ..style \background-color (it, i) -> it.new.kandidati.0.data?barva || utils.getStranaColor i
+        ..style \background-color (it, i) ->
+          if it.new.kandidati.0.hlasu
+            it.new.kandidati.0.data?barva || utils.getStranaColor i
+          else
+            '#bbb'
       ..selectAll \.second
-        ..style \background-color (it, i) -> it.new.kandidati.1.data?barva || utils.getStranaColor i
+        ..style \background-color (it, i) ->
+          if it.new.kandidati.1.hlasu
+            it.new.kandidati.1.data?barva || utils.getStranaColor i
+          else
+            '#bbb'
       ..attr \data-tooltip ~>
         out = ""
         out += "<b>Senátní obvod č. #{it.obvodId}: #{@obvody_meta[it.obvodId].nazev}</b><br>"
-        out += it.new.kandidati.slice 0, 2
-          .map (kandidat, i) ->
-            if kandidat.data
-              "#{kandidat.data.jmeno} <b>#{kandidat.data.prijmeni}</b>: <b>#{utils.percentage kandidat.hlasu / it.new.hlasu} %</b> (#{kandidat.data.zkratka}, #{kandidat.hlasu} hl.)"
-            else if i == 0
-              "Zatím neznámý"
-          .join "<br>"
-        out += "<br>Obvod obhajuje #{it.old.jmeno}, #{it.old.strana}"
+        if it.data.kandidati.0.hlasu
+          out += it.new.kandidati.slice 0, 2
+            .map (kandidat, i) ->
+              if kandidat.data
+                "#{kandidat.data.jmeno} <b>#{kandidat.data.prijmeni}</b>: <b>#{utils.percentage kandidat.hlasu / it.new.hlasu} %</b> (#{kandidat.data.zkratka}, #{kandidat.hlasu} hl.)"
+              else if i == 0
+                "Zatím neznámý"
+            .join "<br>"
+        if it.obvodId % 3
+          out += "<br>#{it.old.jmeno}, #{it.old.strana}"
+        else
+          out += "<br>Obvod obhajuje #{it.old.jmeno}, #{it.old.strana}"
         out
 
   highlight: (obvodId) ->
