@@ -19,7 +19,7 @@ init = ->
   firstScreen =
     element: container.append \div .attr \class "firstScreen"
   window.ig.downloadCache = downloadCache = new window.ig.DownloadCache
-  liveUpdater = new window.ig.LiveUpdater downloadCache
+  window.ig.liveUpdater = liveUpdater = new window.ig.LiveUpdater downloadCache
   # setTimeout do
   #   -> liveUpdater.update "539694"
   #   1000

@@ -32,6 +32,7 @@ class CacheItem
     @valid = no
     @downloading = no
     @data = null
+    setInterval @~checkLiveIsWorking, 60_000
 
   get: (cb) ->
     if @valid
@@ -56,3 +57,7 @@ class CacheItem
       @download!
     else
       @valid = no
+
+  checkLiveIsWorking: ->
+    if not window.ig.liveUpdater.isOnline!
+      @invalidate!
