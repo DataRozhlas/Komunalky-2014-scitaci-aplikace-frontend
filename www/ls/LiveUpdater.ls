@@ -12,7 +12,7 @@ window.ig.LiveUpdater = class LiveUpdater
           switch code
           | 1 => @update "obce"
           | 2 => @update "senat"
-          | 4, 5 => void
+          | 4, 5 => console?log? "Hello"
           | 6 => window.location.reload!
           | otherwise =>
             @update @getObecId code
