@@ -45,11 +45,16 @@ init = ->
   window.ig.suggester = suggester = new window.ig.Suggester suggesterContainer
     ..on \selected displaySwitcher~switchTo
   <~ window.ig.suggester.downloadSuggestions!
-
-  # pha = window.ig.suggester.suggestions
-  #   .filter -> it.id == 539694
-  #   .pop!
-  # displaySwitcher.switchTo pha
+  if document.location.hash
+    id = parseInt do
+      document.location.hash.slice 1
+      10
+    return unless id
+    targetObec = window.ig.suggester.suggestions
+      .filter -> it.id == id
+      .pop!
+    if targetObec
+      displaySwitcher.switchTo targetObec
   # displaySwitcher.switchTo "senat" 4
 
 
