@@ -10,7 +10,9 @@ window.ig.Pekac = class Pekac implements utils.supplementalMixin
     @pager = @bars.append \div
       ..attr \class \pager
     @currentPage = 0
+    @toDisplay = "hlasu"
 
+    @drawSwitcher!
     @drawSupplemental!
     @drawPaginator!
 
@@ -34,9 +36,15 @@ window.ig.Pekac = class Pekac implements utils.supplementalMixin
       ..style \left ~> "#{@columnWidth * it.index}px"
       ..attr \data-tooltip ~>
         "<b>#{it.nazev}</b><br>
-        Získala #{utils.percentage it.hlasu / @hlasu} % hlasů"
+        Získala #{utils.percentage it.hlasu / @hlasu} % hlasů a #{it.zastupitelu} zastupitelů"
       ..select \.barArea
-        ..style \height ~> "#{@y it.hlasu}%"
+        ..style \height ~> "#{@y it[@toDisplay]}%"
+      ..select \.result
+        ..html ~>
+          if @toDisplay == "hlasu"
+            "#{utils.percentage it.hlasu / @hlasu}&nbsp;%"
+          else
+            "#{it.zastupitelu}"
 
   init: ->
     @cacheItem = @downloadCache.getItem "obce"
@@ -45,12 +53,13 @@ window.ig.Pekac = class Pekac implements utils.supplementalMixin
     @saveData data
 
   saveData: (data) ->
-    @data = data
-    @data.strany.sort (a, b) -> b.hlasu - a.hlasu
+    @data = data if data
+    @data.strany.sort (a, b) ~> b[@toDisplay] - a[@toDisplay]
     @data.strany.forEach (d, i) ~>
       d.strana = @strany[d.id]
       d.index = i
-    @y.domain [0 @data.strany.0.hlasu] if @data.strany.length
+
+    @y.domain [0 @data.strany.0[@toDisplay]] if @data.strany.length
     @nextPage.classed \disabled @data.strany.length == 0
     @redraw!
 
@@ -68,7 +77,6 @@ window.ig.Pekac = class Pekac implements utils.supplementalMixin
               it.nazev.replace "Sdružení " "" .split " " .slice 0, 2 .join " "
         ..append \span
           ..attr \class \result
-          ..html ~> "#{utils.percentage it.hlasu / @hlasu} %"
       ..append \div
         ..attr \class \barArea
         ..append \div
@@ -88,7 +96,6 @@ window.ig.Pekac = class Pekac implements utils.supplementalMixin
       <~ setTimeout _, 200
       @prevPage.classed \disabled false
 
-
   drawPaginator: ->
     @nextPage = @element.append \div
       ..attr \class "paginator next"
@@ -96,3 +103,19 @@ window.ig.Pekac = class Pekac implements utils.supplementalMixin
     @prevPage = @element.append \div
       ..attr \class "paginator prev disabled"
       ..on \click ~> @movePage -1
+
+  drawSwitcher: ->
+    @element.append \div
+      ..attr \class \switcher
+      ..selectAll \label .data ["hlasu", "zastupitelu"] .enter!append \label
+        ..append \input
+          ..attr \type \radio
+          ..attr \name \switcher
+          ..attr \checked (d, i) -> if d == "hlasu" then "checked" else void
+          ..on \click ~>
+            @toDisplay = it
+            @saveData!
+        ..append \span
+          ..html ->
+            | it is "hlasu" => "Řadit podle získaných hlasů"
+            | it is "zastupitelu" => "Řadit podle mandátů"

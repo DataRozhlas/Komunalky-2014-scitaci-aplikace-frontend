@@ -41,7 +41,7 @@ init = ->
     {firstScreen, obec, senat}
   obec.displaySwitcher = senat.displaySwitcher = senatKosti.displaySwitcher = displaySwitcher
   suggesterContainer.append \h2
-    ..html "Zobrazit výsledky v obci"
+    ..html "Najděte svou obec"
   window.ig.suggester = suggester = new window.ig.Suggester suggesterContainer
     ..on \selected displaySwitcher~switchTo
   <~ window.ig.suggester.downloadSuggestions!

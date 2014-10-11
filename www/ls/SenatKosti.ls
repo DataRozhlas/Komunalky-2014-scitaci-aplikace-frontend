@@ -79,6 +79,7 @@ window.ig.SenatKosti = class SenatKosti implements utils.supplementalMixin
               "Zatím neznámý"
           .join "<br>"
         out += "<br>Obvod obhajuje #{window.ig.strany[strana].zkratka}"
+        out += "<br><em>Klikněte pro podrobné výsledky</em>"
         out
     utils.resetStranyColors!
     @kostiFirst.style \background-color -> utils.getStranaColor it.data.kandidati.0.data, '#aaa'
