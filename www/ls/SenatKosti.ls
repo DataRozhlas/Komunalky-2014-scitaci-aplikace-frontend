@@ -79,7 +79,7 @@ window.ig.SenatKosti = class SenatKosti implements utils.supplementalMixin
               else if i == 0
                 "Zatím neznámý"
             .join "<br>"
-        out += "<br>Obvod obhajuje #{window.ig.strany[strana].zkratka}"
+        out += "<br>Obvod obhajuje #{window.ig.strany[strana].zkratka}, sečteno je #{utils.percentage obvod.data.okrsky_spocteno / obvod.data.okrsky_celkem}&nbsp;% hlasů"
         out += "<br><em>Klikněte pro podrobné výsledky</em>"
         out
     utils.resetStranyColors!
