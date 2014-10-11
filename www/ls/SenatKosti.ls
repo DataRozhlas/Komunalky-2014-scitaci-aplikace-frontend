@@ -43,7 +43,7 @@ window.ig.SenatKosti = class SenatKosti implements utils.supplementalMixin
     heading = @element.append \h2
     @heading = heading.append \span
       ..attr \class \main
-      ..html "Průběžné výsledky senatních voleb"
+      ..html "Průběžné výsledky senátních voleb"
     heading.append \span
       ..attr \class \sub
       ..html "Podrobné výsledky&hellip;"
