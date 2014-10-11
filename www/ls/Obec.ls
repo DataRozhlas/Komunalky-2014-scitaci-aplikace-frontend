@@ -80,7 +80,6 @@ window.ig.Obec = class Obec
       it.fullType = @getTypeHuman it
       it.top = topCumm
       topCumm += it.rows * @kostSide + nadpisMargin
-
     @kostiCont.selectAll \div.typ.active .data @kosti, (.fullType)
       ..exit!
         ..classed \active no
@@ -124,6 +123,7 @@ window.ig.Obec = class Obec
         ..style \width -> "#{100 * it.data.okrsky_spocteno / it.data.okrsky_celkem}%"
       ..select ".ucast .value"
         ..html ->
+          if it.data.volicu == 0 then it.data.volicu = 1
           "#{utils.formatNumber 100 * it.data.volilo / it.data.volicu}&nbsp;%"
       ..select ".ucast .fill"
         ..style \width -> "#{100 * it.data.volilo / it.data.volicu}%"

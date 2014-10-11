@@ -1,6 +1,10 @@
 init = ->
   new Tooltip!watchElements!
   window.ig.strany = strany = {}
+  lf = String.fromCharCode 13
+  reLf = new RegExp lf, 'g'
+  window.ig.data.strany .= replace reLf, ''
+  window.ig.data.senat .= replace reLf, ''
   for line in window.ig.data.strany.split "\n"
     [vstrana, nazev, zkratka, barva] = line.split "\t"
     strany[vstrana] = {nazev, zkratka, barva}
@@ -41,10 +45,10 @@ init = ->
   window.ig.suggester = suggester = new window.ig.Suggester suggesterContainer
     ..on \selected displaySwitcher~switchTo
   <~ window.ig.suggester.downloadSuggestions!
-  # pha = window.ig.suggester.suggestions
-  #   .filter -> it.id == 539694
-  #   .pop!
-  # displaySwitcher.switchTo pha
+  pha = window.ig.suggester.suggestions
+    .filter -> it.id == 539694
+    .pop!
+  displaySwitcher.switchTo pha
 
 
 if d3?

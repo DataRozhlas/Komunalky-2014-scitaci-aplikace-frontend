@@ -59,10 +59,8 @@ utils.download = (url, cb) ->
       ..onload = -> cb null, JSON.parse xdr.responseText
       ..onerror = -> cb it
       ..send!
-
   else
     d3.json url, cb
-
 
 utils.supplementalMixin =
   updateSupplemental: ->
