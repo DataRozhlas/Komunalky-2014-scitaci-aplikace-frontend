@@ -36,7 +36,7 @@ window.ig.Pekac = class Pekac implements utils.supplementalMixin
       ..style \left ~> "#{@columnWidth * it.index}px"
       ..attr \data-tooltip ~>
         "<b>#{it.nazev}</b><br>
-        Získala #{utils.percentage it.hlasu / @hlasu} % hlasů a #{it.zastupitelu} zastupitelů"
+        Získala #{utils.percentage it.hlasu / @hlasu}&nbsp;% hlasů a&nbsp;#{it.zastupitelu}&nbsp;zastupitelů"
       ..select \.barArea
         ..style \height ~> "#{@y it[@toDisplay]}%"
       ..select \.result
@@ -117,5 +117,5 @@ window.ig.Pekac = class Pekac implements utils.supplementalMixin
             @saveData!
         ..append \span
           ..html ->
-            | it is "hlasu" => "Řadit podle získaných hlasů"
-            | it is "zastupitelu" => "Řadit podle mandátů"
+            | it is "hlasu" => "Řadit podle obdržených hlasů"
+            | it is "zastupitelu" => "Řadit podle získaných mandátů"

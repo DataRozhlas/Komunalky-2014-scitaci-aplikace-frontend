@@ -56,7 +56,13 @@ window.ig.SenatOverview = class SenatOverview
       @obvodElements[obvodId] = obvodElm = @obvodyElm.append \div
         ..attr \class \obvod
       obvodElm.append \h3
-        ..html "#{@obvody_meta[obvodId].nazev}"
+        ..append \span
+          ..attr \class \nazev
+          ..html "#{@obvody_meta[obvodId].nazev}"
+        ..append \span
+          ..attr \class \popisek
+          ..html "Celorepublikové výsledky"
+          ..on \click ~> @scrollable.0.0.scrollTop = top
       new window.ig.SenatObvod obvodElm, obvodId
     @drawAllSenat!
     @updateAllSenat!
@@ -80,7 +86,10 @@ window.ig.SenatOverview = class SenatOverview
         col += 1.5
         row = 0
         @senatPopisky.append \div
-          ..html -> senator.old.strana
+          ..html ->
+            s = senator.old.strana
+            if s == "STAN" then s = "Nezávislí"
+            s
           ..style \left "#{col * kostSide}px"
           ..attr \class \popisek
           ..append \div
@@ -148,4 +157,4 @@ window.ig.SenatOverview = class SenatOverview
       obvodElm.classed \highlight id == obvodId
       if id == obvodId
         top = obvodElm.0.0.offsetTop
-        @scrollable.0.0.scrollTop = top
+        @scrollable.0.0.scrollTop = top - 40

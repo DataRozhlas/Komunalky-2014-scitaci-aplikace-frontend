@@ -22,7 +22,7 @@ window.ig.Obec = class Obec
       ..attr \class \kostiCont
     mapContainer = @element.append \div
       ..attr \class \map-container
-      ..append \h3 .html "Okolí"
+      ..append \h3 .html "Klikněte na obec a prohlédněte si výsledky v okolí"
     @mapElement = mapContainer.append \div
       ..attr \class \map
     @senatContainer = topPart.append \div
@@ -38,7 +38,7 @@ window.ig.Obec = class Obec
     @currentId = id
     @obecData = data
     @obecData.obvodId = (parseInt data.senatObvod, 10)
-    @heading.html "Výsledky v obci #nazev"
+    @heading.html "Průběžné výsledky v obci #nazev"
     @subHeading.html "okres #{okres.nazev}"
     @setMap data
     @unsetData 'obec_2010'
@@ -172,7 +172,7 @@ window.ig.Obec = class Obec
         else
           "<b>Zastupitel za #{@strany[it.strana.id]?.zkratka || it.strana.nazev}</b><br>"
         out += "#{@strany[it.strana.id]?.zkratka || it.strana.nazev} získala #{utils.percentage it.strana.procent} % hlasů, #{it.strana.zastupitelu} zastupitelů<br>"
-        out += "<em>Klikněte pro přiřazení strany do koalice</em>"
+        out += "<em>Klikněte pro přiřazení strany do koalice a podívejte se, s kým složí většinu</em>"
         out
 
     if @favouriteStrany.length

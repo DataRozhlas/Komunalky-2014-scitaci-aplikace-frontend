@@ -83,6 +83,7 @@ window.ig.SenatObvod = class SenatObvod
       ..append \span
         ..attr \class \delim
         ..html ", "
+      ..attr \data-tooltip ~> "#{it.hlasu} hlasů"
 
   destroy: ->
     @element.remove!

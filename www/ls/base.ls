@@ -49,6 +49,7 @@ init = ->
   #   .filter -> it.id == 539694
   #   .pop!
   # displaySwitcher.switchTo pha
+  # displaySwitcher.switchTo "senat" 4
 
 
 if d3?
