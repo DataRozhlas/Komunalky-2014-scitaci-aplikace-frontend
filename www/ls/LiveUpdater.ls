@@ -24,7 +24,6 @@ window.ig.LiveUpdater = class LiveUpdater
   update: (dataType) ->
     return unless dataType
     item = @downloadCache.items[dataType]
-    console.log dataType, item isnt void
     item?invalidate!
 
   getObecId: (code) ->
