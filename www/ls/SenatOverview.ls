@@ -133,6 +133,8 @@ window.ig.SenatOverview = class SenatOverview
       ..append \div .attr \class \first
       ..append \div .attr \class \second
       ..on \click ~> @highlight it.obvodId
+  top: ->
+    @scrollable.0.0.scrollTop = 0
 
   updateAllSenat: ->
     @newSenatObvody.filter (.new)

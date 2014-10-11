@@ -9,6 +9,8 @@ window.ig.DisplaySwitcher = class DisplaySwitcher
       @setActive "senat"
       if args.length
         @senat.highlight ...args
+      else
+        @senat.top!
     | otherwise
       @obec.display target
       @setActive "obec"
