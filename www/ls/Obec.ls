@@ -92,8 +92,42 @@ window.ig.Obec = class Obec
         ..attr \class "typ active"
         ..append \h3
         ..append \div
+          ..attr \class \supplemental
+          ..append \div
+            ..attr \class \secteno
+            ..append \h3 .html "Sečteno"
+            ..append \span
+              ..attr \class \value
+            ..append \div
+              ..attr \class \progress
+              ..append \div
+                ..attr \class \fill
+          ..append \div
+            ..attr \class \ucast
+            ..append \h3 .html "Účast"
+            ..append \span
+              ..attr \class \value
+            ..append \div
+              ..attr \class \progress
+              ..append \div
+                ..attr \class \fill
+        ..append \div
           ..attr \class \kosti
     typy = @kostiCont.selectAll \div.typ.active
+      ..select ".secteno .value"
+        ..html ->
+          n = utils.formatNumber 100 * it.data.okrsky_spocteno / it.data.okrsky_celkem
+          if n == 100 and it.data.okrsky_spocteno != it.data.okrsky_celkem
+            n = 99
+          "#{n}&nbsp;%"
+      ..select ".secteno .fill"
+        ..style \width -> "#{100 * it.data.okrsky_spocteno / it.data.okrsky_celkem}%"
+      ..select ".ucast .value"
+        ..html ->
+          "#{utils.formatNumber 100 * it.data.volilo / it.data.volicu}&nbsp;%"
+      ..select ".ucast .fill"
+        ..style \width -> "#{100 * it.data.volilo / it.data.volicu}%"
+
       ..style \top ~> it.top + "px"
       ..select \h3
         ..html (.fullType)
