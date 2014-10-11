@@ -9,7 +9,7 @@ window.ig.Suggester = class Suggester
   lastQuery: null
   (parentElement) ->
     window.ig.Events @
-    that = @
+    self = @
     onValue = @~onValue
     @suggestions = []
     @container = parentElement .append \div
@@ -17,9 +17,9 @@ window.ig.Suggester = class Suggester
     @input = @container.append \input
       ..attr \placeholder \Adamov
       ..on \focus ->
-          that.downloadSuggestions!
-          that.suggestionsDisabled = no
-          that.onValue @value
+          self.downloadSuggestions!
+          self.suggestionsDisabled = no
+          self.onValue @value
       ..on \blur ~>
         setTimeout @~hideSuggestions, 200
       ..on \keyup -> onValue @value
@@ -34,6 +34,13 @@ window.ig.Suggester = class Suggester
       ..attr \class \suggestionList
     @backbutton = ig.utils.backbutton parentElement
       ..classed \hidden yes
+    try
+      if window.localStorage?smz_vlb_lastSuggestion
+        previous = JSON.parse that
+        @input.0.0.value = previous.nazev
+        @backbutton
+          ..on \click ~> @emit 'selected' previous
+          ..classed \hidden no
 
   onInputSubmitted: (item) ->
     if not item
@@ -41,6 +48,8 @@ window.ig.Suggester = class Suggester
     @suggestionsDisabled = yes
     @input.0.0.value = item.nazev
     @hideSuggestions!
+    try
+      window.localStorage?smz_vlb_lastSuggestion = JSON.stringify item
     @backbutton
       ..on \click ~> @emit 'selected' item
       ..classed \hidden no
