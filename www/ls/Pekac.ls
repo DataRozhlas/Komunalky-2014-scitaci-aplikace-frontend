@@ -89,11 +89,11 @@ window.ig.Pekac = class Pekac implements utils.supplementalMixin
     @pager.style \left "#{@currentPage * 100}%"
     if @currentPage == 0
       @prevPage.classed \disabled true
-      <~ setTimeout _, 200
+      <~ setTimeout _, 800
       @prevPage.classed \removed true
     else
       @prevPage.classed \removed false
-      <~ setTimeout _, 200
+      <~ setTimeout _, 800
       @prevPage.classed \disabled false
 
   drawPaginator: ->
@@ -101,7 +101,7 @@ window.ig.Pekac = class Pekac implements utils.supplementalMixin
       ..attr \class "paginator next"
       ..on \click ~> @movePage +1
     @prevPage = @element.append \div
-      ..attr \class "paginator prev disabled"
+      ..attr \class "paginator prev disabled removed"
       ..on \click ~> @movePage -1
 
   drawSwitcher: ->
