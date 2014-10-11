@@ -55,9 +55,10 @@ window.ig.SenatObvod = class SenatObvod
     @sectenoFill.style \width ~>
       "#{100 * @data.okrsky_spocteno / @data.okrsky_celkem}%"
     @ucastValue.html ~>
-      "#{utils.formatNumber 100 * @data.volilo / @data.volicu}&nbsp;%"
+      "#{utils.formatNumber 100 * @data.volilo / (@data.volicu || 1)}&nbsp;%"
     @ucastFill.style \width ~>
       "#{100 * @data.volilo / @data.volicu}%"
+    return unless @kandidati.0.hlasu
     @kandidatiElm.selectAll \span.kandidat .data @kandidati .enter!append \span
       ..attr \class (d, i) -> "kandidat kandidat-#i"
       ..append \span

@@ -151,7 +151,7 @@ window.ig.SenatOverview = class SenatOverview
       ..attr \data-tooltip ~>
         out = ""
         out += "<b>Senátní obvod č. #{it.obvodId}: #{@obvody_meta[it.obvodId].nazev}</b><br>"
-        if it.data.kandidati.0.hlasu
+        if it.data && it.data.kandidati.0.hlasu
           out += it.new.kandidati.slice 0, 2
             .map (kandidat, i) ->
               if kandidat.data
