@@ -5,6 +5,31 @@ window.ig.SenatObvod = class SenatObvod
     @resource = window.ig.downloadCache.getItem "senat" # fuck DI!
     @element = @parentElement.append \div
       ..attr \class \senat-obvod
+    supplemental = @element.append \div
+      ..attr \class "supplemental supplemental-mini"
+      ..append \div
+        ..attr \class \secteno
+        ..append \h3 .html "Sečteno"
+        ..append \span
+          ..attr \class \value
+        ..append \div
+          ..attr \class \progress
+          ..append \div
+            ..attr \class \fill
+      ..append \div
+        ..attr \class \ucast
+        ..append \h3 .html "Účast"
+        ..append \span
+          ..attr \class \value
+        ..append \div
+          ..attr \class \progress
+          ..append \div
+            ..attr \class \fill
+    @sectenoValue = supplemental.select ".secteno .value"
+    @sectenoFill = supplemental.select ".secteno .fill"
+    @ucastValue = supplemental.select ".ucast .value"
+    @ucastFill = supplemental.select ".ucast .fill"
+
     @kandidatiElm = @element.append \div
       ..attr \class \kandidati
     (err, data) <~ @resource.get
@@ -21,6 +46,18 @@ window.ig.SenatObvod = class SenatObvod
     @kandidati.forEach ~>
       it.data = @senatori["#{@obvodId}-#{it.id}"]
       celkemHlasu += it.hlasu
+
+    @sectenoValue.html ~>
+      n = utils.formatNumber 100 * @data.okrsky_spocteno / @data.okrsky_celkem
+      if n == 100 and @data.okrsky_spocteno != @data.okrsky_celkem
+        n = 99
+      "#{n}&nbsp;%"
+    @sectenoFill.style \width ~>
+      "#{100 * @data.okrsky_spocteno / @data.okrsky_celkem}%"
+    @ucastValue.html ~>
+      "#{utils.formatNumber 100 * @data.volilo / @data.volicu}&nbsp;%"
+    @ucastFill.style \width ~>
+      "#{100 * @data.volilo / @data.volicu}%"
     @kandidatiElm.selectAll \span.kandidat .data @kandidati .enter!append \span
       ..attr \class (d, i) -> "kandidat kandidat-#i"
       ..append \span

@@ -92,7 +92,7 @@ window.ig.Obec = class Obec
         ..attr \class "typ active"
         ..append \h3
         ..append \div
-          ..attr \class \supplemental
+          ..attr \class "supplemental supplemental-mini"
           ..append \div
             ..attr \class \secteno
             ..append \h3 .html "Sečteno"
