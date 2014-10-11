@@ -5,15 +5,18 @@ window.ig.DisplaySwitcher = class DisplaySwitcher
     switch target
     | "firstScreen"
       @setActive "firstScreen"
+      try => window.top.location.hash = "-"
     | "senat"
       @setActive "senat"
       if args.length
         @senat.highlight ...args
       else
         @senat.top!
+      try => window.top.location.hash = "senat"
     | otherwise
       @obec.display target
       @setActive "obec"
+      try => window.top.location.hash = target.id
 
   setActive: (activeField) ->
     for field in <[firstScreen obec senat]>
