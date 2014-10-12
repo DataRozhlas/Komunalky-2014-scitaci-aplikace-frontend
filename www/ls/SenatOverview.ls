@@ -15,7 +15,7 @@ window.ig.SenatOverview = class SenatOverview
     @scrollable = @element.append \div
       ..attr \class \scrollable
     @scrollable.append \h2
-      ..html "Průběžné výsledky senátních voleb"
+      ..html "Konečné výsledky senátních voleb"
     @obvody_meta = window.ig.senat_obvody_meta
     @oldSenatElm = @scrollable.append \div
       ..append \h3 .html "Dosavadní složení senátu"

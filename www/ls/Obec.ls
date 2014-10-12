@@ -38,7 +38,7 @@ window.ig.Obec = class Obec
     @currentId = id
     @obecData = data
     @obecData.obvodId = (parseInt data.senatObvod, 10)
-    @heading.html "Průběžné výsledky v obci #nazev"
+    @heading.html "Konečné výsledky v obci #nazev"
     @subHeading.html "okres #{okres.nazev}"
     @setMap data
     @unsetData 'obec_2010'
