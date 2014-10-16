@@ -61,7 +61,7 @@ window.ig.SenatKosti = class SenatKosti implements utils.supplementalMixin
 
   redraw: ->
     if @data.okrsky_celkem == @data.okrsky_spocteno
-      @heading.html "Celkové výsledky senatních voleb"
+      @heading.html "Celkové výsledky senátních voleb"
     @updateSupplemental!
     @kosti
       ..classed \decided -> it.data.obvodDecided
